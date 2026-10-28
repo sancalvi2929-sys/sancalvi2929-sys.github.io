@@ -151,6 +151,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     else{var o=JSON.parse(localStorage.getItem("kotoba-hakoiri-v1")||"null");
       if(o&&o.words)words=o.words.map(function(w){return {text:w.text,ctx:["free"],bad:[]}});}
   }catch(e){}
+  words.forEach(function(w){if(w.attrs)w.attrs=w.attrs.map(function(a){return a==="ふしぎ"?"不思議":a})});
   function save(){try{localStorage.setItem(KEY,JSON.stringify({words:words,asked:asked}));}catch(e){}}
   var $=function(i){return document.getElementById(i)};
   var bubble=$("bubble"),girl=$("girl"),fb=$("fb"),timer=null,last=null,pend=null;
@@ -346,8 +347,72 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       y:"面白い発想だね|なるほどね",n:"それはちょっと違うかも|ほんとにそうかな？"},
     {id:"kaze",slots:["p","a"],
       f:function(p,a){return "あの、あの、風が吹くのは、大きな扇で誰かが扇いでいるからだそうですわ。それなら、"+p+"様が"+a+"をなさると、嵐になるのですわ！"},
-      y:"面白い発想だね|なるほどね",n:"それはちょっと違うかも|ほんとにそうかな？"}
+      y:"面白い発想だね|なるほどね",n:"それはちょっと違うかも|ほんとにそうかな？"},
+    // ---- ことばのカテゴリーを組み合わせた、ひとこと自分語り ----
+    {id:"hayai",slots:["a"],
+      f:function(a){return a+"するには、わたくしにはまだ早いですわ！"},
+      y:"まだ早いかもね|大人になったらね",n:"もうできるんじゃない？|やってみようよ"},
+    {id:"fullcourse",slots:["f","f","f"],
+      f:function(x,y,z){return "フルコースでは、前菜に"+x+"、メインに"+y+"、デザートに"+z+"をお出しして欲しいですわ！"},
+      y:"豪華だね、おいしそう|いいね、食べたい",n:"変わった組み合わせだね|食べ合わせが心配だよ"},
+    {id:"mainichi",slots:["p","a"],
+      f:function(p,a){return p+"様と"+a+"なんて、毎日しても飽きませんわ〜"},
+      y:"それは楽しそう|素敵だね",n:"毎日はさすがに飽きるよ|ちょっと大変そうだね"},
+    {id:"todoku",slots:["g"],
+      f:function(g){return "どんなに離れていても、想いは通じ合うものですわ。"+g+"にだって、きっと届きますの！"},
+      y:"そうだね、きっと届くよ|素敵な考えだね",n:"遠すぎて届かないかも|ちょっとむずかしいかな"},
+    {id:"butsukete",slots:["b","i"],
+      f:function(b,i){return b+"をぶつけてしまいまして、"+i+"になってしまいましたわ…"},
+      y:"それは大変だったね、お大事に|早くよくなるといいね",n:"それは関係ないんじゃないかな|ほんとに原因はそれ？"},
+    {id:"sign",slots:["p","b"],
+      f:function(p,b){return "憧れの"+p+"様にお会いしましたら、"+b+"にサインして頂きますの！"},
+      y:"いい思い出になるね|会えるといいね",n:"ちょっと恥ずかしいよ|消えなくなっちゃうよ"},
+    {id:"nagaiki",slots:["a"],
+      f:function(a){return "普段"+a+"をしていらっしゃる方は、長生きしやすいと伺いましたわ。"},
+      y:"健康によさそうだね|わたしもやってみようかな",n:"ほんとにそうなの？|ただのうわさじゃない？"},
+    {id:"ouketteisen",slots:["h","g"],
+      f:function(h,g){return "来週、生え抜きの"+h+"が"+g+"に集まって、"+h+"王決定戦が開催されるそうですわ！"},
+      y:"盛り上がりそうだね|見に行ってみたいね",n:"ちょっと危なそうだね|だれが決めるの？"},
+    {id:"uwasa",slots:["p","g"],
+      f:function(p,g){return "ここだけの話、"+p+"様は"+g+"一帯を取り仕切るツワモノだと、もっぱらのウワサですのよ。"},
+      y:"それはすごい人だね|ほんとにすごいね",n:"ただのうわさだよ|信じなくていいよ"},
+    {id:"kawaii",slots:["c","t"],learn:true,
+      f:function(c,t){return c+"って"+t+"でしょうか？"},
+      y:"そうだと思うよ|その通りだよ",n:"ちょっと違うかな|そうは思わないな"},
+    {id:"norimono",slots:["r","g"],
+      f:function(r,g){return r+"でなら、"+g+"にだって行けそうですわ。"},
+      y:"きっと行けるよ|いっしょに行こう",n:"遠すぎるよ|むずかしいんじゃないかな"},
+    {id:"shugyo",slots:["a","j"],
+      f:function(a,j){return a+"の厳しい修行を経て、免許を取って、初めて"+j+"を名乗れるそうですわ。"},
+      y:"大変だけど立派だね|なるほど、すごいね",n:"そこまでしなくていいんじゃない？|それは厳しすぎるよ"},
+    {id:"okari",slots:["c","v"],
+      f:function(c,v){return "昨日お友達から、"+c+"の"+v+"をお借りしましたわ。"},
+      y:"いいお友達だね|楽しめるといいね",n:"ちゃんと返さないとだめだよ|借りすぎはよくないよ"},
+    {id:"ongaku",slots:["c","m"],
+      f:function(c,m){return c+"の"+m+"が、心地よいですわ…"},
+      y:"いい曲だよね|わたしも好きだよ",n:"あまり聞かないな|ちょっとうるさくない？"},
+    {id:"imi",slots:["w","p","c"],
+      f:function(w,p,c){return w+"は、誰のものかで意味が変わりますの。"+p+"様のものなら、"+c+"という意味ですわ！"},
+      y:"おもしろい考えだね|なるほど、深いね",n:"ちょっと意味がわからないな|それはこじつけだよ"}
   ];
+  var SLOT={
+    p:{cat:["celeb","name"],ctx:["person"],d:P_DEF},
+    a:{cat:["do"],ctx:["action","holiday"],d:A_DEF},
+    f:{cat:["fnd"],ctx:["food"],d:["おにぎり","金平糖","抹茶パフェ","たこ焼き","ミルクティー","茶碗蒸し"]},
+    g:{cat:["go"],ctx:["place"],d:["図書館","遊園地","月面基地","温泉","水族館"]},
+    b:{cat:["body"],d:["おでこ","小指","ひざ","まつげ","かかと"]},
+    i:{cat:["ill"],d:["風邪","しゃっくり","五月病","花粉症","虫歯"]},
+    h:{cat:["people"],d:["ご近所さん","魔法使い","忍者","お姫様","探偵"]},
+    r:{cat:["ride"],d:["自転車","ロケット","人力車","気球","路面電車"]},
+    j:{cat:["job"],d:["パティシエ","宇宙飛行士","お医者様","落語家","漁師"]},
+    v:{cat:["see","read"],d:["絵本","星座早見盤","アルバム","百科事典","映画"]},
+    m:{cat:["music"],d:["子守唄","ジャズ","ピアノ曲","雅楽","オルゴール"]},
+    w:{cat:["use","wear"],d:["万年筆","ゴム手袋","マフラー","番傘","かんざし"]},
+    c:{any:true,d:C_DEF},
+    k:{any:true,d:K_DEF},
+    t:{attr:true,d:["かわいい","ロマンチック","かっこいい","綺麗","不思議","大切"]}
+  };
+
   var BYE_DEF=["ごきげんよう","また明日","さようなら"];
   function byeFull(){return byeWord()+"…ですわ。"}
   function byeWord(){var b=words.filter(function(w){return w.ctx.indexOf("bye")>-1});return b.length?pick(b).text:pick(BYE_DEF)}
@@ -355,29 +420,32 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function talkLong(w0){
     var S=STORIES.filter(function(s){return badTalk.indexOf(s.id)<0});
     if(!S.length){badTalk=[];S=STORIES}
-    var s=pick(S),key="talk:"+s.id,used=[],usedT=[],forced=w0,out=[];
+    var s=pick(S),key="talk:"+s.id,used=[],usedT=[],forced=w0,out=[],cw=null,tv=null;
     s.slots.forEach(function(k){
+      var sl=SLOT[k];
+      if(sl.attr){tv=pick(sl.d);out.push(tv);return}
       var pool=words.filter(function(w){
         if(used.indexOf(w)>-1||(w.bad||[]).indexOf(key)>-1)return false;
-        if(k==="p")return w.ctx.indexOf("person")>-1;
-        if(k==="a")return w.ctx.indexOf("action")>-1||w.ctx.indexOf("holiday")>-1;
-        return true;
+        if(sl.any)return true;
+        return (sl.cat&&sl.cat.indexOf(w.cat)>-1)||(sl.ctx&&sl.ctx.some(function(c){return (w.ctx||[]).indexOf(c)>-1}));
       });
       if(s.id==="koibito"&&k==="c"){var rr=pool.filter(function(w){return (w.attrs||[]).indexOf("ロマンチック")>-1});if(rr.length)pool=rr}
       var f=null;
-      if((k==="c"||k==="k")&&forced&&pool.indexOf(forced)>-1){f=forced;forced=null}
-      else if(pool.length&&(k==="p"||k==="a"||Math.random()<.7))f=pick(pool);
-      if(f){used.push(f);usedT.push(f.text);out.push(f.text);return}
-      var d=({p:P_DEF,a:A_DEF,c:C_DEF,k:K_DEF})[k].filter(function(t){return usedT.indexOf(t)<0});
-      var t=pick(d);usedT.push(t);out.push(t);
+      if(sl.any&&forced&&pool.indexOf(forced)>-1){f=forced;forced=null}
+      else if(pool.length&&(!sl.any||Math.random()<.7))f=pick(pool);
+      if(f){used.push(f);usedT.push(f.text);out.push(f.text);if(k==="c")cw=f;return}
+      var d=sl.d.filter(function(t){return usedT.indexOf(t)<0});
+      var t=pick(d.length?d:sl.d);usedT.push(t);out.push(t);
     });
-    return {text:s.f.apply(null,out),use:used,key:key,y:pick(s.y.split("|")),n:pick(s.n.split("|"))};
+    var r={text:s.f.apply(null,out),use:used,key:key,y:pick(s.y.split("|")),n:pick(s.n.split("|"))};
+    if(s.learn&&cw&&tv)r.learn={w:cw,attr:tv};   // 「〇〇って△△でしょうか？」→肯定されたら属性を覚える
+    return r;
   }
   function mutter(){
     var lk=words.filter(function(w){return w.like});
     if(lk.length&&Math.random()<.3){var y=pick(lk);return LIKE[y.like](y.text)}
-    var aw=words.filter(function(w){return w.attrs&&w.attrs.length});
-    if(aw.length&&Math.random()<.35){var x=pick(aw);return ATTRT[pick(x.attrs)](x.text)}
+    var aw=words.filter(function(w){return w.attrs&&w.attrs.some(function(a){return ATTRT[a]})});
+    if(aw.length&&Math.random()<.35){var x=pick(aw);return ATTRT[pick(x.attrs.filter(function(a){return ATTRT[a]}))](x.text)}
     if(words.length&&Math.random()<.5){var w=pick(words);return pick(MONO[ctxFor(w)]||MONO.free)(w.text)}
     var T=TALK[pick(Object.keys(TALK))];
     if(words.length&&Math.random()<.3)return pick(T.w)(pick(words).text);
@@ -411,10 +479,12 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // 操作待ちの間、ときどき独り言をつぶやく
   var idleTimer=null;
   function stopIdle(){clearTimeout(idleTimer);idleTimer=null}
+  function busy(){return ["fb","rate","qa","tp"].some(function(id){return $(id).classList.contains("on")})}
+  function settle(){if(!idleTimer&&!busy())startIdle(8000)}   // 会話が一段落したら、入力待機（独り言）に戻る
   function startIdle(first){
     stopIdle();
     idleTimer=setTimeout(function(){
-      say(mutter());
+      if(!busy())say(mutter());
       startIdle();
     },first||(9000+Math.random()*6000));
   }
@@ -432,7 +502,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     timer=setInterval(function(){                     // 止まらずに表示し続ける
       tn.data=text.slice(0,++i);st.mouth=i%2?"open":"closed";draw();
       if(!userScroll){var max=bt.scrollHeight-bt.clientHeight;if(max>1)bt.scrollTop=max}  // 自動で最新行へ
-      if(i>=text.length){clearInterval(timer);st.mouth="smile";draw();if(after)after()}
+      if(i>=text.length){clearInterval(timer);st.mouth="smile";draw();if(after)after();settle()}
     },45);
   }
   var showFb=function(on){fb.classList.toggle("on",on);if(!on)$("rate").classList.remove("on")};
@@ -613,7 +683,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"cute",attr:"かわいい",
       q:"今朝、窓の外に、小さくて愛らしい影が見えました。わたくし、かわいいものが大好きなのです。あなた様が思う、かわいいものとは何でしょう？",
       end:"なんて愛らしいのでしょう…ぎゅっとしたくなりますわ〜！"},
-    {id:"odd",attr:"ふしぎ",
+    {id:"odd",attr:"不思議",
       q:"夜、星を眺めていたら、不思議な心地になりました。世の中には、わたくしの知らない不思議なものが、たくさんあるのでしょうね。あなた様が知っている、不思議なものとは何でしょう？",
       end:"なんて不思議なのでしょう…もっと知りたくなりますわ！"}
   ];
@@ -621,8 +691,14 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     "ロマンチック":function(n){return n+"…ロマンチックですわ。胸がときめきます。"},
     "かっこいい":function(n){return n+"のように、かっこよく宇宙を駆けてみたいですわ。"},
     "かわいい":function(n){return n+"を思うだけで、頬がゆるんでしまいますの。"},
-    "ふしぎ":function(n){return n+"の不思議を解き明かすのが、わたくしの研究課題でございます。"}
+    "不思議":function(n){return n+"の不思議を解き明かすのが、わたくしの研究課題でございます。"},
+    "綺麗":function(n){return n+"…なんて綺麗なのでしょう。うっとりいたします。"},
+    "大切":function(n){return n+"は、わたくしにとっても、大切にしたいものですわ。"}
   };
+  // 「あなた様にとって、(属性)ものは、何ですか？」— 属性ごとの言葉集めの質問
+  var ASK_ADJ={"かわいい":"かわいい","ロマンチック":"ロマンチックな","かっこいい":"かっこいい","綺麗":"綺麗な","不思議":"不思議な","大切":"大切な"};
+  var ASK_END={"かわいい":"なんて愛らしいのでしょう…ぎゅっとしたくなりますわ〜！","ロマンチック":"トキメキが止まりませんわ〜♡","かっこいい":"なんてかっこいいのでしょう！ 憧れてしまいますわ〜！","綺麗":"なんて綺麗なのでしょう…うっとりいたしますわ。","不思議":"なんて不思議なのでしょう…もっと知りたくなりますわ！","大切":"それほど大切なものなのですね…わたくしも、大切にいたしますわ。"};
+  Object.keys(ASK_ADJ).forEach(function(a){ASKS.push({id:"g-"+a,attr:a,q:"あなた様にとって、"+ASK_ADJ[a]+"ものは、何ですか？",end:ASK_END[a]})});
   var CATCTX={food:"food",person:"person",animal:"animal",action:"action",thing:"thing",place:"place"};
   var tpend=null;
   function teachAsk(){
@@ -630,7 +706,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     say(a.q,function(){showChoices({ask:a,use:[],key:"ask:"+a.id,y:"えーっとね",n:"教えない"})});
   }
   function openT(a){
-    tpend=a;$("tqtext").textContent=a.attr+"なもの（ことば）を教えてください。";$("tword").value="";$("tcat").value="";
+    tpend=a;$("tqtext").textContent=(ASK_ADJ[a.attr]||a.attr+"な")+"もの（ことば）を教えてください。";$("tword").value="";$("tcat").value="";
     say("まあ、嬉しゅうございます。ぜひ、お聞かせくださいませ。",function(){$("tp").classList.add("on");$("tword").focus()});
   }
   function closeT(){$("tp").classList.remove("on");tpend=null}
@@ -655,6 +731,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function judge(d){
     var r=last;last=null;showFb(false);stopIdle();
     if(d>0){if(r&&r.ask){openT(r.ask);return}
+      if(r&&r.learn){var L=r.learn;L.w.attrs=L.w.attrs||[];if(L.w.attrs.indexOf(L.attr)<0)L.w.attrs.push(L.attr);save();render()}
       if(r&&r.key&&r.key.indexOf("talk:")===0){joy();say(byeFull(),function(){startIdle(7000)});return} // お話→プレイヤーの反応→お別れの挨拶
       joy();endTalk(pick(GOOD));return}
     if(r){r.use.forEach(function(w){w.bad=w.bad||[];if(w.bad.indexOf(r.key)<0)w.bad.push(r.key)});
@@ -686,7 +763,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function cleanWord(x){
     if(!x||typeof x.text!=="string"||!x.text.trim()||x.text.length>60)return null;
     var strs=function(a){return Array.isArray(a)?a.filter(function(s){return typeof s==="string"&&s.length<40}).slice(0,40):[]};
-    var w={text:x.text.trim(),ctx:strs(x.ctx),bad:strs(x.bad),attrs:strs(x.attrs)};
+    var w={text:x.text.trim(),ctx:strs(x.ctx),bad:strs(x.bad),attrs:strs(x.attrs).map(function(a){return a==="ふしぎ"?"不思議":a}).filter(function(a){return ATTRT[a]})};
     if(!w.ctx.length)w.ctx=["free"];
     if(typeof x.cat==="string"&&x.cat.length<20)w.cat=x.cat;
     if(x.like>=1&&x.like<=5)w.like=Math.round(x.like);
@@ -747,7 +824,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   fit();
 
   draw();render();
-  say(words.length?"…おかえりなさいませ。本日も、お話しいたしましょう。":"…はじめまして。わたくし、箱の中におります。どうぞ、ことばを教えてくださいませ。",function(){setTimeout(function(){if(pend)return;if(!words.length)ask();else startIdle(6000)},700)});
+  say(words.length?"…おかえりなさいませ。本日も、お話しいたしましょう。":"…はじめまして。わたくし、箱の中におります。どうぞ、ことばを教えてくださいませ。");
 })();
 </script>
 </body>
