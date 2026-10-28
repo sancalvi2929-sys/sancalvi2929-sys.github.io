@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>箱入り娘 ことばあそび</title>
+<title>箱入り娘に言葉を教えるゲーム</title>
 <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -32,7 +32,7 @@ h1{font-size:1.05rem;margin:4px 0 10px;font-weight:400;letter-spacing:.04em}
 .room::after{top:34%;bottom:0;background:linear-gradient(90deg,rgba(150,118,44,.6) 0 3px,transparent 3px) 0 0/150px 100%,linear-gradient(rgba(150,118,44,.6) 0 3px,transparent 3px) 0 0/100% 75px,repeating-linear-gradient(90deg,rgba(196,172,84,.22) 0 1px,transparent 1px 5px),#f3e6a6}
 .bubble{position:relative;z-index:1;width:100%;margin-bottom:24px;background:var(--panel);border:3px solid var(--ink);padding:10px 12px;font-size:1.05rem;line-height:1.6;box-shadow:3px 3px 0 var(--ink)}
 .bubble::after{content:"";position:absolute;left:50%;bottom:-12px;width:16px;height:16px;background:var(--panel);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
-#girl{position:relative;flex:none;width:240px;height:230px;image-rendering:pixelated;cursor:pointer}
+#girl{position:relative;flex:none;width:272px;height:272px;image-rendering:pixelated;cursor:pointer}
 #girl.hop{animation:hop .36s steps(3)}
 @keyframes hop{50%{transform:translateY(-12px)}}
 #btext{height:4.8em;overflow-y:auto;line-height:1.6;scroll-behavior:smooth;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--frame) transparent;padding-right:4px}
@@ -44,7 +44,8 @@ h1{font-size:1.05rem;margin:4px 0 10px;font-weight:400;letter-spacing:.04em}
 #list li.edit{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:6px;padding:10px}
 .chk{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.88rem}
 .chk label{display:flex;gap:4px;align-items:center}
-.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+.row>button{flex:1 1 0;min-width:140px;max-width:200px}
 button,select,input,textarea{font:inherit;color:var(--ink)}
 button{border:3px solid var(--ink);background:var(--panel);padding:8px 12px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
 button.main{background:var(--accent);color:var(--accent-ink)}
@@ -76,12 +77,11 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 </head>
 <body>
 <main>
-<h1>箱入り娘に ことばを おしえよう</h1>
 
 <section class="room" aria-label="箱の中の女の子の部屋">
   <div class="bubble" id="bubble"><div id="btext" aria-live="polite" tabindex="0">…</div></div>
   <div class="stage" id="stage">
-    <canvas id="girl" width="48" height="46" role="img" aria-label="箱に入った黒髪ロングの女の子" tabindex="0"></canvas>
+    <canvas id="girl" width="64" height="64" role="img" aria-label="箱に入った黒髪ロングの女の子" tabindex="0"></canvas>
     <div class="choices" role="group" aria-label="へんじを選ぶ">
       <div class="fb" id="fb">
         <button id="yes">そうだよ</button><button id="no">ちがうよ</button>
@@ -112,18 +112,23 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 </section>
 
 <div class="row">
-  <button class="main" id="speak">はなしかける</button>
-  <button id="ask">しつもんを きく</button>
+    <button class="main" id="speak">
+        はなしかける
+    </button>
+
+    <button id="ask">
+        しつもんを きく
+    </button>
 </div>
 
 <section class="panel">
   <h2>じぶんから ことばを おしえる</h2>
   <div class="form">
-    <input id="word" placeholder="どんな言葉でも（例：感謝の正拳突き）" maxlength="30" autocomplete="off">
+    <input id="word" placeholder="どんな言葉でも" maxlength="30" autocomplete="off">
     <button class="main" id="teach">OK</button>
-    <select id="kind" class="full" aria-label="ことばの種類"><option value="free">種類は おまかせ</option><option value="bye">お別れの挨拶として</option></select>
+    <select id="kind" class="full" aria-label="ことばの種類"><option value="free">種類は おまかせ</option></select>
   </div>
-  <p class="hint">言葉の種類は気にせず入力してOK。名詞として覚えて、いろいろな文に当てはめて話します。返事で否定すると、その文脈ではもう使わなくなり、少しのあいだ独り言をつぶやきます。種類を選んで教えると、その言葉がお好きかどうかをお尋ねします。「有名人」「人の名前」「すること」は、お話の登場人物や技として使われます。</p>
+
 </section>
 
 <section class="panel">
@@ -137,7 +142,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   <div class="row" style="margin:0 0 8px"><button id="xport">コードを表示</button><button id="xcopy">コピー</button></div>
   <textarea id="xcode" rows="4" spellcheck="false" aria-label="引き継ぎコード" placeholder="ここにコードが表示されます。別の端末では、ここに貼り付けて読み込みます。"></textarea>
   <div class="row"><button class="main" id="xmerge">統合して読み込む</button><button id="xrep">置き換えて読み込む</button></div>
-  <p class="hint" id="xmsg" aria-live="polite">統合：今あることばに足し合わせます。置き換え：今のことばを消して、コードの内容だけにします。</p>
+  <p class="hint" id="xmsg" aria-live="polite">統合：ことばを付け足します。置き換え：ことばを上書きします。</p>
 </section>
 </main>
 
@@ -156,35 +161,152 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   var $=function(i){return document.getElementById(i)};
   var bubble=$("bubble"),girl=$("girl"),fb=$("fb"),timer=null,last=null,pend=null;
 
-  // ---------- ドット絵 ----------
-  var cv=girl.getContext("2d"),st={blink:false,happy:false,mouth:"smile"};
-  function px(x,y,w,h,c){cv.fillStyle=c;cv.fillRect(x,y,w,h)}
-  function draw(){
-    var H="#1b1a26",HL="#44425e",S="#ffe2d0",C="#f7f3ff",E="#2a2230",P="#f4a0ae";
-    cv.clearRect(0,0,48,46);
-    px(2,19,4,7,"#a97a47");px(42,19,4,7,"#a97a47");           // 開いたフタ
-    px(6,22,36,5,"#4a2f1a");                                    // 箱の内側
-    px(14,6,20,26,H);px(16,4,16,2,H);px(18,3,12,1,H);          // 後ろ髪
-    px(19,5,1,6,HL);px(29,6,1,5,HL);
-    px(17,10,14,12,S);px(19,22,10,1,S);                         // 顔
-    px(15,23,18,5,C);px(21,23,6,1,S);                           // 服
-    px(16,8,16,3,H);px(17,11,3,2,H);px(22,11,2,1,H);px(28,11,3,2,H); // 前髪
-    px(14,9,3,19,H);px(31,9,3,19,H);px(15,12,1,10,HL);          // 横髪
-    var e=st.happy?1:(st.blink?2:0);
-    if(e===0){px(20,14,2,3,E);px(26,14,2,3,E);px(20,14,1,1,"#fff");px(26,14,1,1,"#fff");}
-    else if(e===2){px(20,16,2,1,E);px(26,16,2,1,E);}
-    else{px(19,16,1,1,E);px(20,15,1,1,E);px(21,16,1,1,E);px(26,16,1,1,E);px(27,15,1,1,E);px(28,16,1,1,E);}
-    px(18,18,2,1,P);px(28,18,2,1,P);
-    if(st.mouth==="open")px(23,19,2,2,"#7a2e3a");
-    else if(st.mouth==="smile"){px(22,19,1,1,"#b05a5a");px(23,20,2,1,"#b05a5a");px(25,19,1,1,"#b05a5a");}
-    else px(23,19,2,1,"#b05a5a");
-    px(5,27,38,3,"#e0b67e");px(6,30,36,16,"#c08f58");px(6,43,36,3,"#9a6e3d"); // 箱の前面
-    px(15,30,1,13,"#a97a47");px(32,30,1,13,"#a97a47");px(21,30,6,13,"#eadfc4");
-    px(22,34,1,1,"#e06a7a");px(24,34,1,1,"#e06a7a");px(21,35,5,1,"#e06a7a");px(22,36,3,1,"#e06a7a");px(23,37,1,1,"#e06a7a"); // ハート
-    px(14,25,3,3,S);px(31,25,3,3,S);                            // 箱のふちに置いた手
+// ---------- ドット絵 ----------
+  var cv = girl.getContext("2d");
+  var st = {
+    mood: "normal",
+    mouth: "closed",
+    act: "normal" // pc, book, doze, think
+  };
+
+  function px(x, y, w, h, c) {
+    cv.fillStyle = c;
+    cv.fillRect(x, y, w, h);
   }
-  setInterval(function(){st.blink=true;draw();setTimeout(function(){st.blink=false;draw()},140)},3800);
-  function joy(){st.happy=true;draw();setTimeout(function(){st.happy=false;draw()},1400)}
+
+  function draw() {
+    cv.clearRect(0, 0, 64, 64);
+    var o = 0;
+    
+    // 居眠り中も少し頭が下がる
+    if (st.mood === "sleepy" || st.act === "doze") o = 1;
+    if (st.mood === "surprise") o = -1;
+
+    var cBox = "#d4a373", cBoxShadow = "#a67c52", cBoxInner = "#5c4033";
+    var cSkin = "#fff0e6", cSkinShadow = "#ffdac4", cBlush = "#ffa6b8";
+    var cHair = "#2c2a38", cHairLight = "#56526e";
+    var cEye = "#5a3148", cEyeWhite = "#ffffff", cEyeHigh = "#ffe6ec";
+    var cClothes = "#f8f9fa", cClothesShadow = "#dee2e6", cRibbon = "#d94a64";
+
+    // --- 箱の内側 ---
+    px(8, 28, 48, 36, cBoxInner);
+
+    // --- 後ろ髪 ---
+    px(14, 10, 36, 42, cHair);
+    px(12, 22, 40, 24, cHair);
+
+    // --- 体と服 ---
+    px(22, 40 + o, 20, 10, cClothes);
+    px(24, 41 + o, 16, 9, cClothesShadow);
+    px(28, 41 + o, 8, 4, cSkinShadow);
+    px(27, 44 + o, 10, 3, cRibbon);
+
+    // --- 顔の輪郭 ---
+    px(17, 18 + o, 30, 20, cSkin); 
+    px(16, 20 + o, 32, 16, cSkin); 
+    px(18, 38 + o, 28, 3, cSkin);  
+    px(20, 41 + o, 24, 2, cSkin);  
+
+    // --- 目 ---
+    var eyeH = (st.mood === "blink" || st.mood === "sleepy" || st.act === "doze") ? 2 : 9;
+    var eyeY = (st.mood === "blink" || st.mood === "sleepy" || st.act === "doze") ? 28 : 23;
+
+    if (st.mood === "think" || st.act === "think") { eyeY = 22; eyeH = 7; }
+    if (st.mood === "surprise") { eyeY = 21; eyeH = 10; }
+
+    if (st.mood === "happy") {
+      px(20, 25 + o, 8, 3, cEye); px(36, 25 + o, 8, 3, cEye);
+      px(20, 27 + o, 8, 2, cSkin); px(36, 27 + o, 8, 2, cSkin);
+      px(19, 27 + o, 2, 2, cEye); px(27, 27 + o, 2, 2, cEye);
+      px(35, 27 + o, 2, 2, cEye); px(43, 27 + o, 2, 2, cEye);
+    } else {
+      px(20, eyeY + o, 8, eyeH, cEye);
+      px(36, eyeY + o, 8, eyeH, cEye);
+      if (eyeH > 2) {
+        px(20, eyeY + o + 1, 2, eyeH - 2, cEyeWhite);
+        px(36, eyeY + o + 1, 2, eyeH - 2, cEyeWhite);
+        px(24, eyeY + o + 1, 3, 4, cEyeHigh);
+        px(40, eyeY + o + 1, 3, 4, cEyeHigh);
+        px(22, eyeY + o + 6, 2, 2, cEyeHigh);
+        px(38, eyeY + o + 6, 2, 2, cEyeHigh);
+      }
+    }
+
+    // --- チーク ---
+    px(17, 29 + o, 4, 3, cBlush);
+    px(43, 29 + o, 4, 3, cBlush);
+
+    // --- 口 ---
+    if (st.mouth === "open" || st.mood === "surprise" || st.mood === "happy") {
+      px(30, 33 + o, 4, 4, "#b05a5a");
+      px(31, 35 + o, 2, 2, "#e68585"); 
+    } else if (st.mood === "think" || st.act === "think") {
+      px(31, 33 + o, 2, 2, "#b05a5a");
+    } else {
+      px(30, 34 + o, 4, 1, "#b05a5a");
+    }
+
+    // --- 前髪・横髪 ---
+    px(15, 9 + o, 34, 7, cHair);
+    px(14, 14 + o, 36, 4, cHair);
+    px(14, 17 + o, 8, 6, cHair); 
+    px(25, 17 + o, 14, 4, cHair); 
+    px(42, 17 + o, 8, 6, cHair); 
+    px(13, 18 + o, 5, 20, cHair); 
+    px(46, 18 + o, 5, 20, cHair); 
+    px(16, 12 + o, 8, 2, cHairLight);
+    px(36, 12 + o, 11, 2, cHairLight);
+
+    // --- 箱の手前（常に描画） ---
+    px(6, 46, 52, 18, cBox);
+    px(6, 46, 52, 2, cBoxShadow); 
+    px(12, 48, 2, 16, cBoxShadow); 
+    px(28, 48, 2, 16, cBoxShadow);
+    px(44, 48, 2, 16, cBoxShadow);
+    px(15, 43 + o, 7, 6, cSkin);
+    px(42, 43 + o, 7, 6, cSkin);
+
+    // --- アイテムのオーバーレイ（上から被せる） ---
+    if (st.act === "pc") {
+      px(16, 42, 32, 14, "#8a94a6"); // 画面枠
+      px(18, 44, 28, 10, "#dce4f0"); // 画面
+      px(14, 56, 36, 4, "#6b7588");  // キーボード部
+      px(22, 54, 5, 4, cSkin);       // 左手
+      px(37, 54, 5, 4, cSkin);       // 右手
+    } else if (st.act === "book") {
+      px(16, 46, 32, 12, "#4a69bd"); // 表紙
+      px(18, 48, 28, 10, "#ffffff"); // ページ
+      px(31, 48, 2, 10, "#e1e5ee");  // のど
+      px(14, 50, 5, 6, cSkin);       // 左手
+      px(45, 50, 5, 6, cSkin);       // 右手
+    }
+
+    // エフェクト（Zzz / 思考バブル）
+    if (st.act === "doze") {
+      px(46, 14 + o, 3, 1, "#ffffff");
+      px(48, 15 + o, 1, 2, "#ffffff");
+      px(46, 17 + o, 3, 1, "#ffffff");
+      px(51, 10 + o, 4, 1, "#ffffff");
+      px(54, 11 + o, 1, 3, "#ffffff");
+      px(51, 14 + o, 4, 1, "#ffffff");
+    }
+    if (st.mood === "think" || st.act === "think") {
+      px(45, 12, 2, 2, "#ffffff");
+      px(48, 8, 3, 3, "#ffffff");
+      px(51, 2, 9, 6, "#ffffff");
+    }
+  }
+
+  draw();
+
+  setInterval(function(){
+    if(st.mood!=="normal" || (st.act!=="normal" && st.act!=="pc" && st.act!=="book")) return;
+    st.mood="blink"; draw();
+    setTimeout(function(){ st.mood="normal"; draw(); }, 120);
+  }, 4200);
+
+  function joy(){ st.mood="happy"; draw(); setTimeout(function(){ st.mood="normal"; draw(); }, 1500); }
+  function surprise(){ st.mood="surprise"; draw(); setTimeout(function(){ st.mood="normal"; draw(); }, 1200); }
 
   // ---------- ことばの使い方（入力はすべて名詞として扱う） ----------
   var CTX={
@@ -225,6 +347,10 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       [function(n){return "お友達と別れる時には、「"+n+"」と申しますのね。"},"そうだよ|よく覚えたね","ちがうよ、ほんとは別|あんまり言わないよ"],
       [function(n){return "「"+n+"」…明日もお会いしたいですわ。"},"また会えるよ|きっと会えるね","明日は忙しいかも|わからないよ"],
       [function(n){return "別れ際に「"+n+"」と言うと、少しだけ寂しさが和らぐ気がいたします。"},"わかるよ|いい言葉だね","寂しいままだよ|気のせいかも"]],
+    mutter:[
+      [function(n){return "ふと、「"+n+"」と呟いてしまいましたわ。"},"わかるよ|わたしもよく言うよ","変な癖だね|人前では控えようね"],
+      [function(n){return "「"+n+"」…と、つい口から出てしまいますの。"},"いいと思うよ|かわいいね","ちょっとびっくりするよ|たまにはやめようね"],
+      [function(n){return "「"+n+"」と申しますと、胸がすっといたしますわ。"},"わかる、すっきりするよね|いい習慣だね","口癖になっちゃうよ|気のせいじゃない？"]],
     thing:[
       [function(n){return "いつか、"+n+"を手に取ってみたいものです。"},"いいものだよ|きっと気に入るよ","ただの道具だよ|なくても大丈夫だよ"],
       [function(n){return "箱の中に"+n+"があったら、毎日が楽しいでしょうね。"},"それは楽しそうだね|飾ってみたいね","場所をとるよ|散らかっちゃうよ"],
@@ -254,6 +380,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     holiday:[function(n){return n+"…いたしたいですわ。"},function(n){return n+"の日々でございます。"},function(n){return "ああ、"+n+"。"}],
     place:[function(n){return n+"…参りたいですわ。"},function(n){return n+"の風を思います。"}],
     night:[function(n){return "「"+n+"」…おやすみなさいませ。"},function(n){return n+"と唱えて、眠りましょう。"}],
+    mutter:[function(n){return "「"+n+"」…と、つぶやいてみましょう。"},function(n){return "…「"+n+"」。ふふ、言ってしまいましたわ。"}],
     bye:[function(n){return "「"+n+"」…と、手を振ってみましょう。"},function(n){return "「"+n+"」…ふふ、練習ですわ。"}],
     thing:[function(n){return n+"…手に取ってみたいですわ。"},function(n){return "ああ、"+n+"。"}],
     person:[function(n){return n+"様…お会いしたいですわ。"},function(n){return n+"様のお名前、素敵でございます。"}],
@@ -300,10 +427,9 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   };
   // 話しかけられたときの自分語り：3文がひとつの筋でつながる「お話」
   // スロット  k=古文のタイトル  c=任意のことば  p=人名  a=動作
-  var P_DEF=["朝永振一郎","湯川秀樹","S.R.White","K.G.Wilson","F.D.M.Haldane","夏目漱石","野口英世"],
-      A_DEF=["感謝の正拳突き","密度行列繰り込み群","",""],
-      C_DEF=["チョコエッグ","連星中性子星BH","研究室","AKLTモデル","おにぎり"],
-      K_DEF=["竹取","源氏","伊勢","宇治拾遺"];
+  // 各カテゴリーのdefault単語（教わった言葉がないときの補い）
+  var DEFS={greet:"ごきげんよう",bye:"さらばだ",celeb:"朝永振一郎",name:"S.R.White",job:"マジ物理学者",people:"バケモン",do:"密度行列繰り込み群",done:"偏微分",go:"研究室",fnd:"チョコエッグ",drink:"カレー",live:"井上トロ",music:"足立レイ",see:"本質",read:"ファインマン物理学",use:"Macbook Neo",wear:"オーラ",ride:"トゥクトゥク",mutter:"オイオイ…",body:"臀部",ill:"インフルエンザA型",thing:"中性脂肪"};
+  var K_DEF=["竹取","源氏","伊勢","宇治拾遺"];
   var STORIES=[
     {id:"koten",slots:["k","p","p","a"],
       f:function(k,p,q,a){return "昨日、古文の授業で、"+k+"物語を習いました。"+p+"に一目惚れをした"+q+"が、比類なき"+a+"で心を撃ち抜くんですの。とってもロマンチックですわ！"},
@@ -391,29 +517,37 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"ongaku",slots:["c","m"],
       f:function(c,m){return c+"の"+m+"が、心地よいですわ…"},
       y:"いい曲だよね|わたしも好きだよ",n:"あまり聞かないな|ちょっとうるさくない？"},
+    {id:"ichinichi",slots:["e"],
+      f:function(e){return "わたくしの1日は"+e+"から始まりますの。"},
+      y:"素敵な朝だね|いい習慣だね",n:"ちょっと変わってるね|朝からすごいね"},
+    {id:"ichikoro",slots:["d"],
+      f:function(d){return "どんなお方も、"+d+"されたらイチコロですわ！"},
+      y:"それは効きそうだね|間違いないね",n:"そんなにうまくいかないよ|それは言い過ぎだよ"},
     {id:"imi",slots:["w","p","c"],
       f:function(w,p,c){return w+"は、誰のものかで意味が変わりますの。"+p+"様のものなら、"+c+"という意味ですわ！"},
       y:"おもしろい考えだね|なるほど、深いね",n:"ちょっと意味がわからないな|それはこじつけだよ"}
   ];
   var SLOT={
-    p:{cat:["celeb","name"],ctx:["person"],d:P_DEF},
-    a:{cat:["do"],ctx:["action","holiday"],d:A_DEF},
-    f:{cat:["fnd"],ctx:["food"],d:["おにぎり","金平糖","抹茶パフェ","たこ焼き","ミルクティー","茶碗蒸し"]},
-    g:{cat:["go"],ctx:["place"],d:["図書館","遊園地","月面基地","温泉","水族館"]},
-    b:{cat:["body"],d:["おでこ","小指","ひざ","まつげ","かかと"]},
-    i:{cat:["ill"],d:["風邪","しゃっくり","五月病","花粉症","虫歯"]},
-    h:{cat:["people"],d:["ご近所さん","魔法使い","忍者","お姫様","探偵"]},
-    r:{cat:["ride"],d:["自転車","ロケット","人力車","気球","路面電車"]},
-    j:{cat:["job"],d:["パティシエ","宇宙飛行士","お医者様","落語家","漁師"]},
-    v:{cat:["see","read"],d:["絵本","星座早見盤","アルバム","百科事典","映画"]},
-    m:{cat:["music"],d:["子守唄","ジャズ","ピアノ曲","雅楽","オルゴール"]},
-    w:{cat:["use","wear"],d:["万年筆","ゴム手袋","マフラー","番傘","かんざし"]},
-    c:{any:true,d:C_DEF},
+    p:{cat:["celeb","name"],d:[DEFS.celeb,DEFS.name]},
+    a:{cat:["do"],d:[DEFS.do]},
+    f:{cat:["fnd","drink"],d:[DEFS.fnd,DEFS.drink]},
+    g:{cat:["go"],d:[DEFS.go]},
+    b:{cat:["body"],d:[DEFS.body]},
+    i:{cat:["ill"],d:[DEFS.ill]},
+    h:{cat:["people"],d:[DEFS.people]},
+    r:{cat:["ride"],d:[DEFS.ride]},
+    j:{cat:["job"],d:[DEFS.job]},
+    v:{cat:["see","read"],d:[DEFS.see,DEFS.read]},
+    m:{cat:["music"],d:[DEFS.music]},
+    w:{cat:["use","wear"],d:[DEFS.use,DEFS.wear]},
+    c:{any:true,d:Object.keys(DEFS).map(function(k){return DEFS[k]})},
     k:{any:true,d:K_DEF},
+    e:{cat:["greet"],d:[DEFS.greet]},
+    d:{cat:["done"],d:[DEFS.done]},
     t:{attr:true,d:["かわいい","ロマンチック","かっこいい","綺麗","不思議","大切"]}
   };
 
-  var BYE_DEF=["ごきげんよう","また明日","さようなら"];
+  var BYE_DEF=[DEFS.bye];
   function byeFull(){return byeWord()+"…ですわ。"}
   function byeWord(){var b=words.filter(function(w){return w.ctx.indexOf("bye")>-1});return b.length?pick(b).text:pick(BYE_DEF)}
   var badTalk=[];
@@ -427,7 +561,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       var pool=words.filter(function(w){
         if(used.indexOf(w)>-1||(w.bad||[]).indexOf(key)>-1)return false;
         if(sl.any)return true;
-        return (sl.cat&&sl.cat.indexOf(w.cat)>-1)||(sl.ctx&&sl.ctx.some(function(c){return (w.ctx||[]).indexOf(c)>-1}));
+        return !!(sl.cat&&sl.cat.indexOf(w.cat)>-1);
       });
       if(s.id==="koibito"&&k==="c"){var rr=pool.filter(function(w){return (w.attrs||[]).indexOf("ロマンチック")>-1});if(rr.length)pool=rr}
       var f=null;
@@ -476,34 +610,84 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     }
     return longBuild(w,ctxFor(w),false);
   }
-  // 操作待ちの間、ときどき独り言をつぶやく
-  var idleTimer=null;
-  function stopIdle(){clearTimeout(idleTimer);idleTimer=null}
-  function busy(){return ["fb","rate","qa","tp"].some(function(id){return $(id).classList.contains("on")})}
-  function settle(){if(!idleTimer&&!busy())startIdle(8000)}   // 会話が一段落したら、入力待機（独り言）に戻る
-  function startIdle(first){
-    stopIdle();
-    idleTimer=setTimeout(function(){
-      if(!busy())say(mutter());
-      startIdle();
-    },first||(9000+Math.random()*6000));
+
+// ---------- 待機アニメーション（プレイヤーの操作が常に最優先） ----------
+  var idleTimer = null, idleMood = false, talking = false;
+  function busy() { return ["fb","rate","qa","tp"].some(function(id){return $(id).classList.contains("on")}) }
+  function cancelIdleTimer() { clearTimeout(idleTimer); idleTimer = null; }
+
+  // 待機アニメを即座に中断し、通常の姿に戻す（予約済みタイマーも全て解除）
+  function stopIdle() {
+    cancelIdleTimer();
+    if (st.act !== "normal") {
+      st.act = "normal";
+      if (idleMood) st.mood = "normal";
+      idleMood = false;
+      draw();
+    }
+  }
+  // delay ms 後にランダムアニメを予約。会話中・操作待ち中は予約しない
+  function startIdle(delay) {
+    cancelIdleTimer();
+    if (busy() || talking) return;
+    idleTimer = setTimeout(idleStep, delay == null ? 5000 : delay);
+  }
+  function settle() { if (!idleTimer) startIdle(5000); }
+
+  // 待機中の行動：独り言 or 待機アニメを、ランダムに選ぶ
+  function idleStep() {
+    idleTimer = null;
+    if (busy() || talking) return;          // 操作・会話が優先
+    if (Math.random() < 0.5) say(mutter());  // 独り言（終了後は say() 内の settle() が次を予約）
+    else playRandomAction();
   }
 
-  var userScroll=false;
-  function say(text,after){
+  function playRandomAction() {
+    idleTimer = null;
+    if (busy() || talking) return;          // 操作・会話が優先
+    var acts = ["pc", "book", "doze", "think"];
+    st.act = acts[Math.floor(Math.random() * acts.length)];
+    if (st.act === "think") st.mood = "think";
+    else if (st.act === "doze") st.mood = "sleepy";
+    else st.mood = "normal";
+    idleMood = true;
+    $("btext").textContent = "…";
+    draw();
+    // 10秒後に通常へ戻り、5秒後に次のアニメへ
+    idleTimer = setTimeout(function() {
+      idleTimer = null;
+      stopIdle();
+      startIdle(5000);
+    }, 10000);
+  }
+
+  var userScroll = false;
+  function say(text, after) {
     clearInterval(timer);
-    var bt=$("btext");
-    userScroll=false;
-    bt.style.scrollBehavior="auto";bt.textContent="";bt.scrollTop=0;bt.style.scrollBehavior="";
-    var tn=document.createTextNode("");bt.appendChild(tn);
+    stopIdle();                              // 喋り始めたらアニメを解除
+    talking = true;
+    var bt = $("btext");
+    userScroll = false;
+    bt.style.scrollBehavior = "auto"; bt.textContent = ""; bt.scrollTop = 0; bt.style.scrollBehavior = "";
+    var tn = document.createTextNode(""); bt.appendChild(tn);
     girl.classList.add("hop");
-    setTimeout(function(){girl.classList.remove("hop")},400);
-    var i=0;
-    timer=setInterval(function(){                     // 止まらずに表示し続ける
-      tn.data=text.slice(0,++i);st.mouth=i%2?"open":"closed";draw();
-      if(!userScroll){var max=bt.scrollHeight-bt.clientHeight;if(max>1)bt.scrollTop=max}  // 自動で最新行へ
-      if(i>=text.length){clearInterval(timer);st.mouth="smile";draw();if(after)after();settle()}
-    },45);
+    setTimeout(function(){ girl.classList.remove("hop") }, 400);
+
+    var i = 0;
+    timer = setInterval(function() {
+      tn.data = text.slice(0, ++i);
+      st.mouth = (i % 2 === 0) ? "open" : "closed";
+      draw();
+      if (!userScroll) { var max = bt.scrollHeight - bt.clientHeight; if (max > 1) bt.scrollTop = max; }
+      if (i >= text.length) {
+        clearInterval(timer);
+        talking = false;
+        st.mouth = "smile";
+        draw();
+        if (after) after();
+        settle();                            // 操作待ち（busy）でなければ待機アニメを予約
+      }
+    }, 45);
   }
   var showFb=function(on){fb.classList.toggle("on",on);if(!on)$("rate").classList.remove("on")};
 
@@ -513,10 +697,9 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function buildEditor(li,w){
     li.className="edit";
     li.appendChild(mk("strong","「"+w.text+"」を訂正する"));
-    var OLD={food:"fnd",person:"name",animal:"live",action:"do",place:"go"};
-    var init=catOf0(w.cat)||OLD[w.cat]||((w.ctx||[]).indexOf("bye")>-1?"bye":"free");
+    var init=catOf0(w.cat)||"free";
     var sel=mk("select");sel.setAttribute("aria-label","カテゴリー");
-    [["free","種類は おまかせ"],["bye","お別れの挨拶"]].concat(CATS.map(function(c){return [c.id,c.label]})).forEach(function(o){
+    [["free","種類は おまかせ"]].concat(CATS.map(function(c){return [c.id,c.label]})).forEach(function(o){
       var op=mk("option",o[1]);op.value=o[0];if(o[0]===init)op.selected=true;sel.appendChild(op)});
     li.appendChild(mk("small","カテゴリー"));li.appendChild(sel);
     li.appendChild(mk("small","属性"));
@@ -536,7 +719,6 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       var v=sel.value;
       if(v!==init){
         if(v==="free"){delete w.cat;w.ctx=["free"]}
-        else if(v==="bye"){delete w.cat;w.ctx=["bye"]}
         else{var c=catOf(v);w.cat=c.id;w.ctx=[c.ctx]}
         w.bad=[];
       }
@@ -599,16 +781,17 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   function closeQ(){$("qa").classList.remove("on");pend=null}
 
-  function add(t,c){
+  var QCAT={food:"fnd",animal:"live",greet:"greet",mood:"mutter",holiday:"do",place:"go",night:"bye",person:"name",action:"do",bye:"bye"};
+  function add(t,c,cat){
     var ex=words.filter(function(w){return w.text===t})[0];
-    if(ex){if(ex.ctx.indexOf(c)<0)ex.ctx.push(c);ex.bad=(ex.bad||[]).filter(function(k){return k!==c});return "up"}
-    words.push({text:t,ctx:[c],bad:[]});return "new";
+    if(ex){if(cat)ex.cat=cat;if(ex.ctx.indexOf(c)<0)ex.ctx.push(c);ex.bad=(ex.bad||[]).filter(function(k){return k!==c});return "up"}
+    words.push({text:t,ctx:[c],bad:[],cat:cat});return "new";
   }
   function answer(){
     if(!pend)return;stopIdle();
     var list=$("ans").value.split(/[、,，\n]+/).map(function(t){return t.trim()}).filter(Boolean);
     if(!list.length){say("…お答えいただけますでしょうか。");return}
-    var res=list.map(function(t){return add(t,pend.id)});
+    var res=list.map(function(t){return add(t,pend.id,QCAT[pend.id])});
     asked.push(pend.id);save();render();joy();
     var id=pend.id;closeQ();
     var w=words.filter(function(x){return x.text===list[0]})[0];
@@ -626,21 +809,23 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     var w=words.filter(function(x){return x.text===t})[0];
     if(cat)w.cat=cat.id;
     save();render();joy();$("word").value="";
-    if(cat){say(t+"ですわね！"+t+"はお好きでしょうか？",function(){showRate(w)});return}
-    var r=longBuild(w,kd,true);
+    if(cat&&!cat.norate){say(t+"ですわね！"+t+"はお好きでしょうか？",function(){showRate(w)});return}
+    var r=longBuild(w,cat?cat.ctx:kd,true);
     say("「"+t+"」…"+(r0==="up"?"存じておりますが、あらためて覚えました。":"覚えました。")+r.text,function(){showChoices(r)});
   }
   // ---------- ことばのカテゴリーと「お好きでしょうか？」の5段階評価 ----------
   // ctx＝そのカテゴリーの言葉が文の中で使われるときの文脈
   var CATS=[
+    {id:"greet",label:"出会いの挨拶",ctx:"greet",norate:true},{id:"bye",label:"別れの挨拶",ctx:"bye",norate:true},
     {id:"celeb",label:"有名人",ctx:"person"},{id:"name",label:"人の名前",ctx:"person"},
     {id:"job",label:"職業",ctx:"free"},{id:"people",label:"人を表す言葉",ctx:"free"},
-    {id:"do",label:"すること",ctx:"action"},{id:"go",label:"行くところ",ctx:"place"},
-    {id:"fnd",label:"飲食物",ctx:"food"},{id:"live",label:"生き物",ctx:"animal"},
+    {id:"do",label:"すること",ctx:"action"},{id:"done",label:"されること",ctx:"free"},
+    {id:"go",label:"場所",ctx:"place"},{id:"fnd",label:"食べ物",ctx:"food"},
+    {id:"drink",label:"飲み物",ctx:"food"},{id:"live",label:"生き物",ctx:"animal"},
     {id:"music",label:"音楽",ctx:"free"},{id:"see",label:"見るもの",ctx:"thing"},
     {id:"read",label:"読むもの",ctx:"free"},{id:"use",label:"使うもの",ctx:"thing"},
     {id:"wear",label:"身につけるもの",ctx:"thing"},{id:"ride",label:"乗り物",ctx:"free"},
-    {id:"kotoba",label:"コトバ",ctx:"free"},{id:"body",label:"体の一部",ctx:"free"},
+    {id:"mutter",label:"つぶやき",ctx:"mutter",norate:true},{id:"body",label:"体の一部",ctx:"free"},
     {id:"ill",label:"病気",ctx:"free"},{id:"thing",label:"モノ",ctx:"thing"}
   ];
   var catOf=function(id){return CATS.filter(function(c){return c.id===id})[0]||CATS[CATS.length-1]};
@@ -722,7 +907,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     save();render();joy();
     var lead=a.lead&&a.lead[ck]?a.lead[ck](t):(ck==="person"?t+"様…":t+"…");
     say(lead+a.end,function(){
-      idleTimer=setTimeout(function(){say(t+"ですわね！"+t+"はお好きでしょうか？",function(){showRate(w)})},800);
+      idleTimer=setTimeout(function(){if(catOf(c).norate)return;say(t+"ですわね！"+t+"はお好きでしょうか？",function(){showRate(w)})},800);
     });
   }
 
@@ -745,15 +930,33 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   function nope(){endTalk("そうなんですか？")}
 
-  $("teach").onclick=teach;
+  $("teach").onclick=function(){
+    stopIdle();
+    teach();
+  };
   $("tgo").onclick=submitT;
   $("tcancel").onclick=function(){closeT();stopIdle();nope()};
   $("ansgo").onclick=answer;
   $("pass").onclick=function(){stopIdle();if(pend){asked.push(pend.id);save()}closeQ();say("さようでございますか。また、お聞かせくださいませ。")};
-  $("speak").onclick=function(){speak()};
-  $("ask").onclick=function(){ask()};
-  girl.onclick=function(){speak()};
-  girl.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();speak()}});
+  $("speak").onclick=function(){
+    stopIdle();
+    speak();
+  };
+  $("ask").onclick=function(){
+    stopIdle();
+    ask()
+  };
+  girl.onclick=function(){
+    stopIdle();
+    speak()
+  };
+  girl.addEventListener("keydown",function(e){
+    if(e.key==="Enter"||e.key===" "){
+      e.preventDefault();
+      stopIdle();
+      speak();
+    }
+  });
   $("yes").onclick=function(){judge(1)};
   $("no").onclick=function(){judge(-1)};
 
@@ -765,7 +968,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     var strs=function(a){return Array.isArray(a)?a.filter(function(s){return typeof s==="string"&&s.length<40}).slice(0,40):[]};
     var w={text:x.text.trim(),ctx:strs(x.ctx),bad:strs(x.bad),attrs:strs(x.attrs).map(function(a){return a==="ふしぎ"?"不思議":a}).filter(function(a){return ATTRT[a]})};
     if(!w.ctx.length)w.ctx=["free"];
-    if(typeof x.cat==="string"&&x.cat.length<20)w.cat=x.cat;
+    if(CATS.some(function(c){return c.id===x.cat}))w.cat=x.cat;
     if(x.like>=1&&x.like<=5)w.like=Math.round(x.like);
     return w;
   }
@@ -815,15 +1018,21 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // 吹き出しと重ならないよう、ドット絵は整数倍で枠に収まる最大サイズにする
   function fit(){
     var s=$("stage");if(!s)return;
-    var k=Math.floor(Math.min((s.clientWidth-136)/48,s.clientHeight/46));
-    k=Math.max(2,Math.min(k,8));
-    girl.style.width=48*k+"px";girl.style.height=46*k+"px";
+    var k=Math.floor(Math.min((s.clientWidth-136)/64,s.clientHeight/64)*4)/4;   // 0.25刻み＝表示サイズは常に整数px
+    k=Math.max(1,Math.min(k,4.5));
+    girl.style.width=64*k+"px";girl.style.height=64*k+"px";
   }
   window.addEventListener("resize",fit);
   if(window.ResizeObserver)new ResizeObserver(fit).observe($("stage"));
   fit();
 
-  draw();render();
+  draw();render();stopIdle();
+  ["pointerdown","keydown","input","focusin"].forEach(function(ev){
+    document.addEventListener(ev,function(){
+      if(st.act!=="normal")stopIdle();       // アニメ中の操作は即中断
+      else if(idleTimer)startIdle(5000);     // 操作中は次のアニメ開始を先送り
+    },true);
+  });
   say(words.length?"…おかえりなさいませ。本日も、お話しいたしましょう。":"…はじめまして。わたくし、箱の中におります。どうぞ、ことばを教えてくださいませ。");
 })();
 </script>
