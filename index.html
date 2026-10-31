@@ -1126,7 +1126,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     var by={},unk=[];
     words.forEach(function(w){if(w.cat&&catOf0(w.cat))(by[w.cat]=by[w.cat]||[]).push(w);else unk.push(w)});
     var filled=CATS.filter(function(c){return by[c.id]}).length;
-    $("zsum").textContent="覚えたことば "+words.length+"語 ／ "+CATS.length+"カテゴリーのうち "+filled+"つで登場";
+    $("zsum").textContent="覚えたことば "+words.length+"語 ／ "+CATS.length+"カテゴリー";
     var tr=$("ztro");tr.textContent="";
     TROPHIES.forEach(function(t){
       var on=trophies.indexOf(t.id)>-1,s=mk("span","","ztr"+(on?"":" off"));
