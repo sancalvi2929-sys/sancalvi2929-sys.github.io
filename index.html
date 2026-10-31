@@ -1111,7 +1111,6 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     shelf.setAttribute("role","img");
     shelf.setAttribute("aria-label","本棚："+(tn.length?tn.join("、")+"、":"")+(titles.length?titles.join("、"):"本はまだありません"));
     box.appendChild(shelf);
-    if(!n)box.appendChild(mk("div","ことばを5つ覚えるごとに、本棚に本が1冊増えていきます","propHint"));
     if(propCount>=0&&n>propCount){
       toast('<b>本棚に本が増えました</b><small>覚えた言葉 '+words.length+'語（'+n+'冊）</small>');
       if(box.scrollTo)box.scrollTo({left:box.scrollWidth,behavior:"smooth"});
