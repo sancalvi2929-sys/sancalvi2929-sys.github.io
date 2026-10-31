@@ -26,10 +26,10 @@ html,body{margin:0;background:var(--wall);color:var(--ink);font-family:"DotGothi
 :root{padding-top:var(--pad-top);padding-bottom:var(--pad-bottom)}
 main{max-width:520px;margin:0 auto;padding:12px 14px 28px}
 h1{font-size:1.05rem;margin:4px 0 10px;font-weight:400;letter-spacing:.04em}
-.room{position:relative;border:3px solid var(--ink);background:#f6edbd;height:440px;display:flex;flex-direction:column;align-items:center;padding:12px 12px 14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
+.room{position:relative;border:3px solid var(--ink);background:#f6edbd;height:540px;display:flex;flex-direction:column;align-items:center;padding:12px 12px 14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
 .room::before,.room::after{content:"";position:absolute;left:0;right:0;z-index:0;pointer-events:none}
-.room::before{top:0;height:34%;background:linear-gradient(#c9a05a 0 0) 0 100%/100% 6px no-repeat,repeating-linear-gradient(90deg,transparent 0 76px,rgba(176,140,70,.28) 76px 78px),#fbf4cf}
-.room::after{top:34%;bottom:0;background:linear-gradient(90deg,rgba(150,118,44,.6) 0 3px,transparent 3px) 0 0/150px 100%,linear-gradient(rgba(150,118,44,.6) 0 3px,transparent 3px) 0 0/100% 75px,repeating-linear-gradient(90deg,rgba(196,172,84,.22) 0 1px,transparent 1px 5px),#f3e6a6}
+.room::before{top:0;height:45%;background:linear-gradient(#c9a05a 0 0) 0 100%/100% 6px no-repeat,repeating-linear-gradient(90deg,transparent 0 76px,rgba(176,140,70,.28) 76px 78px),#fbf4cf}
+.room::after{top:45%;bottom:0;background:linear-gradient(90deg,rgba(150,118,44,.6) 0 3px,transparent 3px) 0 0/150px 100%,linear-gradient(rgba(150,118,44,.6) 0 3px,transparent 3px) 0 0/100% 75px,repeating-linear-gradient(90deg,rgba(196,172,84,.22) 0 1px,transparent 1px 5px),#f3e6a6}
 .bubble{position:relative;z-index:1;width:100%;margin-bottom:24px;background:var(--panel);border:3px solid var(--ink);padding:10px 12px;font-size:1.05rem;line-height:1.6;box-shadow:3px 3px 0 var(--ink)}
 .bubble::after{content:"";position:absolute;left:50%;bottom:-12px;width:16px;height:16px;background:var(--panel);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
 #girl{position:relative;flex:none;width:272px;height:272px;image-rendering:pixelated;cursor:pointer}
@@ -55,7 +55,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,#girl:focus-visibl
 .panel{background:var(--panel);border:3px solid var(--ink);padding:12px 14px;margin-top:14px}
 .panel h2{font-size:.95rem;margin:0 0 8px;font-weight:400}
 #qa,#tp{border-color:var(--accent)}
-#qtext{margin:0 0 8px;line-height:1.6}
+#qtext,#tqtext{margin:0 0 8px;line-height:1.6}
 .form{display:grid;grid-template-columns:1fr auto;gap:8px}
 .form .full{grid-column:1/-1}
 input,select,textarea{background:var(--input);border:3px solid var(--line);padding:8px 10px;min-width:0;width:100%;border-radius:0}
@@ -73,6 +73,35 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 .room button{border-color:var(--frame);box-shadow:2px 2px 0 var(--frame2)}
 .room button.main{border-color:var(--frame2)}
 .overlay{border-color:var(--frame);box-shadow:3px 3px 0 var(--frame2)}
+.row.three>button{min-width:100px}
+.props{position:relative;z-index:1;flex:none;width:100%;height:92px;margin-bottom:6px;display:flex;align-items:flex-end;gap:14px;padding:0 4px 4px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:var(--frame) transparent}
+.prop{flex:none;position:relative}
+.shelf{display:flex;align-items:flex-end;gap:2px;min-width:150px;height:82px;padding:4px 8px 9px;background:#8d5f33;border:3px solid #5e3d1d;box-shadow:inset 0 -7px 0 #6e4a22}
+.shelf .tr{flex:none;display:block;margin-right:4px}
+.shelf .tr svg{width:30px;height:30px;display:block}
+.book{flex:none;width:17px;writing-mode:vertical-rl;font-size:11px;line-height:17px;color:#fff;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-top:3px;border-radius:1px 1px 0 0;box-shadow:inset -2px 0 0 rgba(0,0,0,.18)}
+.book.pop{animation:propPop .6s}
+.propHint{align-self:center;margin:0 auto;font-size:.8rem;color:var(--muted)}
+.toast.pop{animation:propPop .6s}
+@keyframes propPop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.toast{position:absolute;left:50%;top:46%;transform:translateX(-50%);z-index:7;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 18px;background:#fffbe6;border:3px solid var(--frame);box-shadow:3px 3px 0 var(--frame2);text-align:center;max-width:90%;pointer-events:none}
+.toast[hidden]{display:none}
+.toast .tr svg{width:40px;height:40px}
+.toast small{color:var(--muted)}
+.zback{position:fixed;inset:0;z-index:50;display:flex;justify-content:center;align-items:flex-start;overflow:auto;background:rgba(20,15,10,.55);padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))}
+.zback[hidden]{display:none}
+.zpanel{width:100%;max-width:520px;background:var(--panel);color:var(--ink);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:14px 16px}
+.zhead{display:flex;justify-content:space-between;align-items:center}
+.zhead h2{margin:0;font-size:1.1rem;font-weight:400}
+.ztro{display:flex;gap:14px;margin:6px 0 4px}
+.ztr{display:flex;flex-direction:column;align-items:center;font-size:.72rem}
+.ztr.off svg{opacity:.45}
+.zsec h3{margin:12px 0 6px;font-size:.9rem;font-weight:400;border-bottom:2px solid var(--line);padding-bottom:2px}
+.zlist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.zlist li{display:flex;align-items:center;gap:6px;border:2px solid var(--line);padding:3px 4px 3px 8px;font-size:.88rem}
+.zlist li.edit{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:6px;padding:10px}
+.zlist small{color:var(--muted)}
+.zlist button{padding:0 6px;border-width:2px;font-size:.75rem;box-shadow:none}
 </style>
 </head>
 <body>
@@ -80,6 +109,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 
 <section class="room" aria-label="箱の中の女の子の部屋">
   <div class="bubble" id="bubble"><div id="btext" aria-live="polite" tabindex="0">…</div></div>
+  <div class="props" id="props" aria-label="部屋の飾り"></div>
   <div class="stage" id="stage">
     <canvas id="girl" width="64" height="64" role="img" aria-label="箱に入った黒髪ロングの女の子" tabindex="0"></canvas>
     <div class="choices" role="group" aria-label="へんじを選ぶ">
@@ -92,19 +122,28 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       <div class="fb" id="attr" role="group" aria-label="正しい属性を選ぶ"></div>
     </div>
   </div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <section class="overlay" id="qa" aria-label="しつもんへの答え">
   <p id="qtext"></p>
   <div class="form">
     <input id="ans" autocomplete="off" maxlength="30" aria-label="答え">
-    <select id="qcat" class="full" style="display:none" aria-label="ことばの種類"><option value="">ことばの種類を選んでください</option></select>
     <button class="main" id="ansgo">OK</button>
     <button id="pass" class="full">パスする</button>
   </div>
   <p class="hint">どんな言葉でもOK。名詞として覚えて、その質問に合った文で使います。</p>
 </section>
+<section class="overlay" id="tp" aria-label="ことばを教える">
+  <p id="tqtext"></p>
+  <div class="form">
+    <input id="tword" maxlength="30" placeholder="教えることば（例：ゴム手袋）" autocomplete="off" aria-label="教えることば">
+    <button class="main" id="tgo">OK</button>
+    <select id="tcat" class="full" aria-label="ことばの種類"><option value="">ことばの種類を選んでください</option></select>
+    <button id="tcancel" class="full">やっぱりやめておく</button>
+  </div>
+</section>
 </section>
 
-<div class="row">
+<div class="row three">
     <button class="main" id="speak">
         はなしかける
     </button>
@@ -112,6 +151,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     <button id="ask">
         しつもんを きく
     </button>
+
+    <button id="zukanBtn">ことばずかん</button>
 </div>
 
 <section class="panel">
@@ -125,11 +166,6 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 </section>
 
 <section class="panel">
-  <h2>おぼえた ことば</h2>
-  <ul id="list"></ul>
-</section>
-
-<section class="panel">
   <h2>ことばの引き継ぎ（端末をまたいで共有）</h2>
   <p class="hint" style="margin:0 0 8px">教えたことばと、そのカテゴリー・属性・お好みを、引き継ぎコードにして別の端末へ渡せます。</p>
   <div class="row" style="margin:0 0 8px"><button id="xport">コードを表示</button><button id="xcopy">コピー</button></div>
@@ -139,13 +175,22 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 </section>
 </main>
 
+<div class="zback" id="zukan" hidden>
+  <div class="zpanel" role="dialog" aria-modal="true" aria-labelledby="ztitle">
+    <div class="zhead"><h2 id="ztitle">ことばずかん</h2><button id="zclose" aria-label="とじる">×</button></div>
+    <p class="hint" id="zsum"></p>
+    <div class="ztro" id="ztro"></div>
+    <div id="zbody"></div>
+  </div>
+</div>
+
 <script>
 (function(){
   var KEY="kotoba-hakoiri-v2";
-  var words=[],asked=[];
+  var words=[],asked=[],trophies=null;
   try{
     var s=JSON.parse(localStorage.getItem(KEY)||"null");
-    if(s){words=s.words||[];asked=s.asked||[];}
+    if(s){words=s.words||[];asked=s.asked||[];trophies=s.trophies||null;}
     else{var o=JSON.parse(localStorage.getItem("kotoba-hakoiri-v1")||"null");
       if(o&&o.words)words=o.words.map(function(w){return {text:w.text,ctx:["free"],bad:[]}});}
   }catch(e){}
@@ -154,7 +199,10 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   var CTXCAT={food:"fnd",animal:"live",greet:"greet",mood:"mutter",holiday:"do",action:"do",place:"go",night:"bye",bye:"bye",person:"name",thing:"thing"};
   function fixCat(w){if(w.cat)return;for(var i=0;i<(w.ctx||[]).length;i++){if(CTXCAT[w.ctx[i]]){w.cat=CTXCAT[w.ctx[i]];return}}}
   words.forEach(fixCat);
-  function save(){try{localStorage.setItem(KEY,JSON.stringify({words:words,asked:asked}));}catch(e){}}
+  var TROPHIES=[{id:"bronze",n:10,label:"ブロンズ",color:"#cd7f32"},{id:"silver",n:50,label:"シルバー",color:"#c0c7d1"},{id:"gold",n:100,label:"ゴールド",color:"#f2c230"}];
+  // すでに条件を満たしている既存データには、お知らせなしで付与する
+  if(!Array.isArray(trophies))trophies=TROPHIES.filter(function(t){return words.length>=t.n}).map(function(t){return t.id});
+  function save(){try{localStorage.setItem(KEY,JSON.stringify({words:words,asked:asked,trophies:trophies}));}catch(e){}}
   var $=function(i){return document.getElementById(i)};
   var bubble=$("bubble"),girl=$("girl"),fb=$("fb"),timer=null,last=null,pend=null;
 
@@ -163,7 +211,10 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   var st = {
     mood: "normal",
     mouth: "closed",
-    act: "normal" // pc, book, doze, think
+    act: "normal", // pc, book, doze, think, sneeze, float
+    sn: 0,         // くしゃみの段階 1:吸う 2:くしゅん 3:余韻
+    lift: 0,       // 浮遊の高さ(px)
+    t: 0           // きらめきの時間
   };
 
   function px(x, y, w, h, c) {
@@ -173,11 +224,20 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 
   function draw() {
     cv.clearRect(0, 0, 64, 64);
+    var lift = (st.act === "float") ? (st.lift || 0) : 0;
+    if (st.act === "float") {           // 足もとの影（高く浮くほど小さく薄く）
+      var sw = 40 - lift * 2;
+      cv.fillStyle = "rgba(70,45,20,0.22)";
+      cv.fillRect(32 - sw / 2, 62, sw, 2);
+      cv.fillRect(32 - (sw - 6) / 2, 61, sw - 6, 1);
+    }
+    cv.save(); cv.translate(0, -lift);
     var o = 0;
     
     // 居眠り中も少し頭が下がる
     if (st.mood === "sleepy" || st.act === "doze") o = 1;
     if (st.mood === "surprise") o = -1;
+    if (st.act === "sneeze") o = (st.sn === 1) ? -1 : (st.sn === 2 ? 2 : 1);
 
     var cBox = "#d4a373", cBoxShadow = "#a67c52", cBoxInner = "#5c4033";
     var cSkin = "#fff0e6", cSkinShadow = "#ffdac4", cBlush = "#ffa6b8";
@@ -205,8 +265,10 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     px(20, 41 + o, 24, 2, cSkin);  
 
     // --- 目 ---
-    var eyeH = (st.mood === "blink" || st.mood === "sleepy" || st.act === "doze") ? 2 : 9;
-    var eyeY = (st.mood === "blink" || st.mood === "sleepy" || st.act === "doze") ? 28 : 23;
+    var shut = (st.mood === "blink" || st.mood === "sleepy" || st.act === "doze" || st.act === "float" || (st.act === "sneeze" && st.sn >= 2));
+    var eyeH = shut ? 2 : 9;
+    var eyeY = shut ? 28 : 23;
+    if (st.act === "sneeze" && st.sn === 1) { eyeY = 25; eyeH = 5; }   // 息を吸い込む：目を細める
 
     if (st.mood === "think" || st.act === "think") { eyeY = 22; eyeH = 7; }
     if (st.mood === "surprise") { eyeY = 21; eyeH = 10; }
@@ -234,7 +296,10 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     px(43, 29 + o, 4, 3, cBlush);
 
     // --- 口 ---
-    if (st.mouth === "open" || st.mood === "surprise" || st.mood === "happy") {
+    if (st.act === "sneeze" && st.sn === 2) {
+      px(28, 33 + o, 8, 6, "#b05a5a");
+      px(30, 36 + o, 4, 3, "#e68585");
+    } else if (st.mouth === "open" || st.mood === "surprise" || st.mood === "happy" || (st.act === "sneeze" && st.sn === 1)) {
       px(30, 33 + o, 4, 4, "#b05a5a");
       px(31, 35 + o, 2, 2, "#e68585"); 
     } else if (st.mood === "think" || st.act === "think") {
@@ -291,6 +356,19 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       px(45, 12, 2, 2, "#ffffff");
       px(48, 8, 3, 3, "#ffffff");
       px(51, 2, 9, 6, "#ffffff");
+    }
+    cv.restore();                                   // ここまでが浮き上がる対象
+
+    if (st.act === "sneeze" && st.sn === 2) {       // くしゃみのしぶき
+      px(48, 28 + o, 3, 2, "#cfe8ff"); px(52, 26 + o, 2, 2, "#e6f3ff");
+      px(51, 31 + o, 2, 1, "#cfe8ff"); px(55, 29 + o, 1, 1, "#ffffff");
+      px(12, 31 + o, 2, 1, "#cfe8ff");
+    }
+    if (st.act === "float") {                       // きらめき
+      var t = st.t || 0;
+      [[8, 20], [56, 24], [12, 42], [53, 44], [34, 6]].forEach(function(p, i) {
+        if (((t + i * 2) % 8) < 4) { px(p[0], p[1], 1, 3, "#fff3a8"); px(p[0] - 1, p[1] + 1, 3, 1, "#fff3a8"); }
+      });
     }
   }
 
@@ -433,7 +511,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"ctx-person-1",slots:["p","b"],need:1,f:function(a,b){return "いつか"+a+"様のような、立派な方になりとうございますわ。"},y:"なれるさ",n:"きっとね",yr:function(a,b){return "まずは、"+b+"を鍛えますわ！"},nr:"夢はでっかく、ですわ。"},
     {id:"ctx-action-0",slots:["a","p"],need:1,f:function(a,b){return a+"を極めとうございますわ。"},y:"教えてあげる",n:"まだ早い",yr:function(a,b){return "打倒"+b+"様！ですわ！"},nr:function(a,b){return "そんな…わたくしは早く"+b+"様と並び立ちたいのです！"}},
     {id:"ctx-action-1",slots:["a","b"],need:1,f:function(a){return "毎朝、"+a+"の修行をしておりますわ。"},y:"元気だね",n:"やめるんだ",yr:function(a,b){return "おかげで"+b+"が軽いですわ〜！"},nr:function(a,b){return "せっかく"+b+"がカチカチになってきてまいりましたのに…"}},
-    {id:"talk-yesterday-s0",slots:["c","p"],f:function(a,b){return +a+"についての論文がたくさん見つかりましたわ！？"},y:function(a,b){return b+"の専門だね"},n:"今や誰でもできちゃうんだよね",yr:function(a,b){return b+"様ってすごいですわね…"},nr:"思ってたよりハードル低いんですのね？"},
+    {id:"talk-yesterday-s0",slots:["c","p"],f:function(a,b){return a+"についての論文がたくさん見つかりましたわ！？"},y:function(a,b){return b+"の専門だね"},n:"今や誰でもできちゃうんだよね",yr:function(a,b){return b+"様ってすごいですわね…"},nr:"思ってたよりハードル低いんですのね？"},
     {id:"talk-yesterday-w0",slots:["c","g","g"],need:1,f:function(a,b,c){return "次の"+a+"の国際会議、"+b+"みたいですわ！？"},y:"行った方がいい",n:"ちょっと遠いか",yr:"ポスターの1枚ぐらい、間に………間に…合…わせますわ!!!",nr:function(a,b,c){return "せめて…せめて"+c+"なら…"}},
     {id:"talk-yesterday-w1",slots:["c"],need:1,f:function(n){return n+"ノートが3冊目に突入しましたわ。"},y:"やるね",n:"何をしているの？",yr:"何か、何か掴めそうなのです！",nr:"ええ、本当に…"}
   ];
@@ -468,9 +546,9 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // 共通の返事ボタン（y/n を持たない1文の語り用）
   var COMMON={y:"そうなんだ|いいね|なるほど",n:"そうかな？|うーん…|ちょっと違うかも"};
   function compatible(sl,w){return !sl.attr&&(sl.any||(!!sl.cat&&sl.cat.indexOf(w.cat)>-1))}
-  function slotPool(sl,key,used,filter){
+  function slotPool(sl,key,used){
     return words.filter(function(w){
-      return used.indexOf(w)<0&&(w.bad||[]).indexOf(key)<0&&compatible(sl,w)&&(!filter||filter(w));
+      return used.indexOf(w)<0&&(w.bad||[]).indexOf(key)<0&&compatible(sl,w);
     });
   }
   // お話が今のことば／強制語で成立するか（need=ことばを実際に使う台本）
@@ -494,7 +572,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       var f=null;
       if(forced&&compatible(sl,forced)&&used.indexOf(forced)<0){f=forced;forced=null}
       else{
-        var pool=slotPool(sl,key,used,s.filter);
+        var pool=slotPool(sl,key,used);
         if(s.id==="koibito"&&k==="c"){var rr=pool.filter(function(w){return (w.attrs||[]).indexOf("ロマンチック")>-1});if(rr.length)pool=rr}
         if(pool.length&&(need||!sl.any||Math.random()<.7))f=pick(pool);
       }
@@ -522,13 +600,13 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     return r;
   }
   // 属性の語り（ATTRT）：否定された属性は避ける
-  function attrCandidates(w){return (w.attrs||[]).filter(function(a){return ATTRT[a]&&!isRating(a)&&(w.bad||[]).indexOf("attr:"+a)<0})}
+  function attrCandidates(w){return (w.attrs||[]).filter(function(a){return ATTRT[a]&&(w.bad||[]).indexOf("attr:"+a)<0})}
   function attrLine(w,a){
     return {text:ATTRT[a](w.text),use:[w],key:"attr:"+a,y:pick(COMMON.y.split("|")),n:pick(COMMON.n.split("|"))};
   }
   function compose(o){
     var fw=o&&o.w;
-    var lw=fw?(likeOf(fw)?[fw]:[]):words.filter(function(w){return likeOf(w)});
+    var lw=fw?(fw.like?[fw]:[]):words.filter(function(w){return w.like});
     if(lw.length&&Math.random()<.1)return likeLong(pick(lw));
     var aw=(fw?[fw]:words).filter(function(w){return attrCandidates(w).length});
     if(aw.length&&Math.random()<.1){var x=pick(aw);return attrLine(x,pick(attrCandidates(x)))}
@@ -536,15 +614,16 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
 
 // ---------- 待機アニメーション（プレイヤーの操作が常に最優先） ----------
-  var idleTimer = null, idleMood = false, talking = false;
-  function busy() { return ["fb","rate","attr","qa"].some(function(id){return $(id).classList.contains("on")}) }
+  var idleTimer = null, idleMood = false, talking = false, floatTimer = null, lastAct = "";
+  function busy() { return zOpen || ["fb","rate","attr","qa","tp"].some(function(id){return $(id).classList.contains("on")}) }
   function cancelIdleTimer() { clearTimeout(idleTimer); idleTimer = null; }
 
   // 待機アニメを即座に中断し、通常の姿に戻す（予約済みタイマーも全て解除）
   function stopIdle() {
     cancelIdleTimer();
+    clearInterval(floatTimer); floatTimer = null;
     if (st.act !== "normal") {
-      st.act = "normal";
+      st.act = "normal"; st.sn = 0; st.lift = 0;
       if (idleMood) st.mood = "normal";
       idleMood = false;
       draw();
@@ -568,8 +647,11 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function playRandomAction() {
     idleTimer = null;
     if (busy() || talking) return;          // 操作・会話が優先
-    var acts = ["pc", "book", "doze", "think"];
+    var acts = ["pc", "book", "doze", "think", "sneeze", "float"].filter(function(a){ return a !== lastAct; });
     st.act = acts[Math.floor(Math.random() * acts.length)];
+    lastAct = st.act;
+    if (st.act === "sneeze") { playSneeze(); return; }
+    if (st.act === "float") { playFloat(); return; }
     if (st.act === "think") st.mood = "think";
     else if (st.act === "doze") st.mood = "sleepy";
     else st.mood = "normal";
@@ -582,6 +664,26 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       stopIdle();
       startIdle(5000);
     }, 10000);
+  }
+
+  // くしゃみ：吸う → くしゅん！ → 余韻（約5秒）
+  function playSneeze() {
+    idleMood = true; st.mood = "normal"; st.sn = 1;
+    $("btext").textContent = "…は…は…"; draw();
+    idleTimer = setTimeout(function() {
+      st.sn = 2; $("btext").textContent = "くしゅんっ！"; draw();
+      idleTimer = setTimeout(function() {
+        st.sn = 3; $("btext").textContent = "失礼いたしました。誰かが、わたくしのうわさを…？"; draw();
+        idleTimer = setTimeout(function() { idleTimer = null; stopIdle(); startIdle(5000); }, 2800);
+      }, 900);
+    }, 1100);
+  }
+  // 空中浮遊：箱ごとふわりと浮かんで、きらめく（約8秒）
+  function playFloat() {
+    idleMood = true; st.mood = "normal"; st.t = 0; st.lift = 4;
+    $("btext").textContent = "…ふわふわ…"; draw();
+    floatTimer = setInterval(function() { st.t++; st.lift = Math.round(4 + 3 * Math.sin(st.t / 3)); draw(); }, 140);
+    idleTimer = setTimeout(function() { idleTimer = null; stopIdle(); startIdle(5000); }, 8000);
   }
 
   var userScroll = false;
@@ -617,7 +719,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // ---------- おぼえたことばの訂正（カテゴリー・属性・お好み） ----------
   var editIdx=-1;
   function mk(tag,txt,cls){var e=document.createElement(tag);if(txt)e.textContent=txt;if(cls)e.className=cls;return e}
-  function buildEditor(li,w){
+  function buildEditor(li,w,done){
     li.className="edit";
     li.appendChild(mk("strong","「"+w.text+"」を訂正する"));
     var init=catOf0(w.cat)||"free";
@@ -627,14 +729,14 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     li.appendChild(mk("small","カテゴリー"));li.appendChild(sel);
     li.appendChild(mk("small","属性"));
     var box=mk("div","","chk"),cks=[];
-    Object.keys(ATTRT).filter(function(a){return !isRating(a)}).forEach(function(a){
+    Object.keys(ATTRT).forEach(function(a){
       var lb=mk("label"),ck=document.createElement("input");ck.type="checkbox";ck.value=a;ck.checked=(w.attrs||[]).indexOf(a)>-1;
       lb.appendChild(ck);lb.appendChild(document.createTextNode(a));box.appendChild(lb);cks.push(ck)});
     li.appendChild(box);
     li.appendChild(mk("small","お好み（あなた様の評価）"));
     var lk=mk("select");lk.setAttribute("aria-label","お好み");
     [["","まだ聞いていない"],["5","大好き"],["4","好き"],["3","普通"],["2","嫌い"],["1","大嫌い"]].forEach(function(o){
-      var op=mk("option",o[1]);op.value=o[0];if(String(likeOf(w)||"")===o[0])op.selected=true;lk.appendChild(op)});
+      var op=mk("option",o[1]);op.value=o[0];if(String(w.like||"")===o[0])op.selected=true;lk.appendChild(op)});
     li.appendChild(lk);
     var row=mk("div","","row");row.style.margin="4px 0 0";
     var ok=mk("button","保存","main"),cancel=mk("button","キャンセル");
@@ -646,38 +748,22 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
         w.bad=[];
       }
       w.attrs=cks.filter(function(c){return c.checked}).map(function(c){return c.value});
-      if(lk.value)addAttr(w,RATE_ATTRS[5-(+lk.value)]);   // お好みも属性として保存
-      editIdx=-1;save();render();say("「"+w.text+"」…教えていただいたとおり、訂正いたしました。");
+      if(lk.value)w.like=+lk.value;else delete w.like;
+      if(done)done();else editIdx=-1;save();render();say("「"+w.text+"」…教えていただいたとおり、訂正いたしました。");
     };
-    cancel.onclick=function(){editIdx=-1;render()};
+    cancel.onclick=function(){if(done)done();else editIdx=-1;render()};
     row.appendChild(ok);row.appendChild(cancel);li.appendChild(row);
   }
   function catOf0(id){return CATS.some(function(c){return c.id===id})?id:null}
-  function render(){
-    var ul=$("list");ul.textContent="";
-    if(!words.length){var e=document.createElement("li");e.className="empty";e.style.border="0";e.textContent="まだ、ことばを存じません…";ul.appendChild(e);return}
-    words.forEach(function(w,idx){
-      var li=document.createElement("li");
-      if(idx===editIdx){buildEditor(li,w);ul.appendChild(li);return}
-      li.appendChild(document.createTextNode(w.text+" "));
-      var cl=CATS.filter(function(c){return c.id===w.cat})[0];if(cl){var cs=document.createElement("small");cs.textContent="（"+cl.label+"）";li.appendChild(cs)}
-      if(w.attrs&&w.attrs.length){var at=document.createElement("small");at.textContent="（"+w.attrs.join("・")+"）";li.appendChild(at)}
-      var b=document.createElement("button");b.textContent="×";b.setAttribute("aria-label",w.text+"をわすれさせる");
-      b.onclick=function(){stopIdle();words.splice(idx,1);save();render();say("「"+w.text+"」…あら、何でしたかしら。")};
-      var eb=document.createElement("button");eb.textContent="訂正";eb.setAttribute("aria-label",w.text+"を訂正する");
-      eb.onclick=function(){stopIdle();editIdx=idx;render()};
-      li.appendChild(eb);li.appendChild(b);ul.appendChild(li);
-    });
-  }
-
+  function render(){renderProps();checkTrophy();if(zOpen)renderZukan()}
   function showChoices(r){last=r;$("yes").textContent=r.y;$("no").textContent=r.n;showFb(true)}
   function speak(o){
-    stopIdle();showFb(false);last=null;
+    closeT();stopIdle();showFb(false);last=null;
     if(pend)return;
     var r0=Math.random();
-    if(r0<.1){(o&&o.w)?ask(o.w):askPlain();return} // 質問は約1割（従来の質問。語をクリックしたときは確認型）
+    if(r0<.1){(o||Math.random()<.5)?teachAsk():ask();return} // 質問は約1割
     var r=compose(o);
-    if(!r){askPlain();return}
+    if(!r){ask();return}
     say(r.text,function(){showChoices(r)});
   }
 
@@ -697,8 +783,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   ];
   // スロット付き質問は、教わったことばが足りないと成立しない
   function qEligible(q){return q.slots.every(function(k){var sl=SLOT[k];return sl.attr||slotPool(sl,"q:"+q.id,[]).length>0})}
-  function askPlain(){
-    stopIdle();showFb(false);last=null;$("qcat").style.display="none";
+  function ask(){
+    closeT();stopIdle();showFb(false);last=null;
     var left=QS.filter(function(q){return asked.indexOf(q.id)<0});
     if(!left.length){asked=[];left=QS}
     // QSLOT_RATE の確率でスロット付き質問、それ以外は通常の質問。成立しなければ通常の質問
@@ -711,7 +797,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     $("qtext").textContent=pend.q;$("ans").placeholder=pend.ph;$("ans").value="";
     say(pend.q,function(){$("qa").classList.add("on");$("ans").focus()});
   }
-  function closeQ(){$("qa").classList.remove("on");$("qcat").style.display="none";pend=null}
+  function closeQ(){$("qa").classList.remove("on");pend=null}
 
   var QCAT={food:"fnd",animal:"live",greet:"greet",mood:"mutter",holiday:"do",place:"go",night:"bye",person:"name",action:"do",bye:"bye"};
   function add(t,c,cat){
@@ -723,7 +809,6 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if(!pend)return;stopIdle();
     var list=$("ans").value.split(/[、,，\n]+/).map(function(t){return t.trim()}).filter(Boolean);
     if(!list.length){say("…お答えいただけますでしょうか。");return}
-    if(pend.attr){answerAttr(list);return}   // 属性つきの質問（ことばの種類を選んでもらう）
     var res=list.map(function(t){return add(t,pend.base,QCAT[pend.base])});
     asked.push(pend.id);save();render();joy();
     var id=pend.id;closeQ();
@@ -762,7 +847,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"ill",label:"病気",ctx:"free"},{id:"thing",label:"モノ",ctx:"thing"}
   ];
   var catOf=function(id){return CATS.filter(function(c){return c.id===id})[0]||CATS[CATS.length-1]};
-  CATS.forEach(function(c){["qcat","kind"].forEach(function(id){var o=document.createElement("option");o.value=c.id;o.textContent=c.label;$(id).appendChild(o)})});
+  CATS.forEach(function(c){["tcat","kind"].forEach(function(id){var o=document.createElement("option");o.value=c.id;o.textContent=c.label;$(id).appendChild(o)})});
   var LIKE={
     5:function(n){return "あなた様は、"+n+"が大好きなのですよね。"},
     4:function(n){return "あなた様は、"+n+"がお好きなのですよね。"},
@@ -777,13 +862,13 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     2:"あまりお好きではないのですね。承知いたしました。",
     1:"まあ、大の苦手でいらっしゃるのですね。無理にはお誘いしませんわ。"
   };
-  function likeLong(w){var r=talkLong(w);r.text=LIKE[likeOf(w)](w.text)+r.text;return r}
+  function likeLong(w){var r=talkLong(w);r.text=LIKE[w.like](w.text)+r.text;return r}
   var rw=null;
   function showRate(w){rw=w;$("rate").classList.add("on")}
   [].forEach.call($("rate").querySelectorAll("button"),function(b){
     b.onclick=function(){
       if(!rw)return;
-      var v=+b.getAttribute("data-v");addAttr(rw,RATE_ATTRS[5-v]);rw=null;save();render();
+      var v=+b.getAttribute("data-v");rw.like=v;rw=null;save();render();
       $("rate").classList.remove("on");if(v>3)joy();
       say(RLINE[v]);
     };
@@ -792,9 +877,9 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // ---------- プレイヤーから「属性つきのことば」を教わる ----------
   var ASKS=[
     {id:"love",attr:"ロマンチック",
-      q:"いま、世界でいちばんロマンチックなものをご存知ですか？ね、ね、なんだと思います？",
-      lead:{thing:function(n){return "そうなんですの！特別な"+n+"…"},food:function(n){return "そうなんですの！カップルで"+n+"を頂いちゃったりして…"},person:function(n){return "そうなんですの！"+n+"様のことを考えますと…"},animal:function(n){return "そうなんですの！"+n+"の佇まい…"},action:function(n){return "そうなんですの！カップルで"+n+"をしちゃったり…？"},place:function(n){return "そうなんですの！カップルで"+n+"へ参るなんて…"}},
-      end:"にゃ〜♡トキメキが止まりませんわ〜♡"},
+      q:"昨日、とある方から贈り物を頂戴いたしましたの！とってもロマンチックですわ！ね、ね、なんだと思いますか？",
+      end:"トキメキが止まりませんわ〜♡",
+      lead:{thing:function(n){return "お揃いの"+n+"…"},food:function(n){return "二人で"+n+"をいただくなんて…"},person:function(n){return n+"様からだなんて…"},animal:function(n){return n+"と一緒だなんて…"},action:function(n){return "二人で"+n+"をするなんて…"},place:function(n){return n+"へ二人で参るなんて…"}}},
     {id:"cool",attr:"かっこいい",
       q:"最近のトレンドは、かっこいいで爆モテ！だそうですの。かっこいいものって何がありますでしょうか？",
       end:"それですわ〜！これでわたくしも爆モテですわ〜♡"},
@@ -806,85 +891,50 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       end:"次から次へと…ふふ、楽しいですわね。"}
   ];
   var ATTRT={
-    "ロマンチック":function(n){return n+"…やっぱりコレですわ。ロマンは全てに優先しますわ。"},
-    "かっこいい":function(n){return n+"に似合うだけの大人になりたいですわ。"},
+    "ロマンチック":function(n){return n+"…やっぱりコレですわ。コレなんですわ。"},
+    "かっこいい":function(n){return n+"っぽくキメポーズ、ですわ。"},
     "かわいい":function(n){return n+"を思うだけで、頬がゆるんでしまいますの。"},
-    "不思議":function(n){return n+"、どんどん疑問が出てきますわ。"},
+    "不思議":function(n){return n+"は、AIに聞いてもよくわかりませんでしたわ。"},
     "綺麗":function(n){return n+"…なんて綺麗なのでしょう。"},
     "大切":function(n){return n+"を、時々眺めてみるのですわ。"}
   };
   // 「あなた様にとって、(属性)ものは、何ですか？」— 属性ごとの言葉集めの質問
-  // 大好き〜大嫌いも属性として扱う（反応文は LIKE を流用）。この5つは同時に1つだけ持てる
-  var RATE_ATTRS=["大好き","好き","普通","嫌い","大嫌い"],RATE_VAL={"大好き":5,"好き":4,"普通":3,"嫌い":2,"大嫌い":1};
-  RATE_ATTRS.forEach(function(a){ATTRT[a]=LIKE[RATE_VAL[a]]});
-  function isRating(a){return RATE_ATTRS.indexOf(a)>-1}
-  function likeOf(w){var a=(w.attrs||[]).filter(isRating)[0];return a?RATE_VAL[a]:0}   // 1〜5（無ければ0）
-  function addAttr(w,a){   // 属性の追加は必ずここを通す（ひとつの語が複数の属性を持てる）
-    w.attrs=w.attrs||[];
-    if(isRating(a))w.attrs=w.attrs.filter(function(x){return !isRating(x)});   // 評価だけは入れ替え
-    if(w.attrs.indexOf(a)<0)w.attrs.push(a);
-  }
-  // 旧データ互換：like(1〜5) を属性へ移す
-  words.forEach(function(w){if(w.like>=1&&w.like<=5&&!likeOf(w))addAttr(w,RATE_ATTRS[5-Math.round(w.like)]);delete w.like});
   var ASK_ADJ={"かわいい":"かわいい","ロマンチック":"ロマンチックな","かっこいい":"かっこいい","綺麗":"綺麗な","不思議":"不思議な","大切":"大切な"};
   var ASK_END={"かわいい":"なんて愛らしいのでしょう…ぎゅっとしたくなりますわ〜！","ロマンチック":"トキメキが止まりませんわ〜♡","かっこいい":"なんてかっこいいのでしょう！ 憧れてしまいますわ〜！","綺麗":"なんて綺麗なのでしょう…うっとりいたしますわ。","不思議":"なんて不思議なのでしょう…もっと知りたくなりますわ！","大切":"それほど大切なものなのですね…わたくしも、大切にいたしますわ。"};
   Object.keys(ASK_ADJ).forEach(function(a){ASKS.push({id:"g-"+a,attr:a,q:"あなた様にとって、"+ASK_ADJ[a]+"ものは、何ですか？",end:ASK_END[a]})});
   var CATCTX={food:"food",person:"person",animal:"animal",action:"action",thing:"thing",place:"place"};
-  // ---------- 質問ボタン：属性つきの質問（確認型 or 入力型） ----------
-  var YN_RATE=0.5;   // 確認型 : 入力型 の配分
-  // 確認型：「〇〇って、ロマンチックですか？」— q は STORIES の f と同じ書き方（引数はスロットのことば）
-  var YNQ=Object.keys(ATTRT).map(function(a){return {id:"attr-"+a,type:"yn",attr:a,slots:["c"],
-    filter:isRating(a)?function(w){return !likeOf(w)}:function(w){return (w.attrs||[]).indexOf(a)<0},   // まだその属性（評価は、まだ評価していない語）だけ
-    q:function(c){return c+"って、"+a+"ですか？"}}});
-  function ynEligible(q,fw){
-    var key="attr:"+q.attr;                                       // 否定した語は避ける（attrLine と共通）
-    if(fw)return q.filter(fw)&&(fw.bad||[]).indexOf(key)<0;
-    return slotPool(SLOT.c,key,[],q.filter).length>0;
+  var tpend=null;
+  function teachAsk(){
+    var a=pick(ASKS);
+    say(a.q,function(){showChoices({ask:a,use:[],key:"ask:"+a.id,y:"えーっとね",n:"教えない"})});
   }
-  function ask(fw){
-    closeQ();stopIdle();showFb(false);last=null;
-    var yn=YNQ.filter(function(q){return ynEligible(q,fw)});
-    if(yn.length&&Math.random()<YN_RATE)askYN(pick(yn),fw);else askAttr();
+  function openT(a){
+    tpend=a;$("tqtext").textContent=(ASK_ADJ[a.attr]||a.attr+"な")+"ことばを教えてください。";$("tword").value="";$("tcat").value="";
+    say("まあ、ぜひ、お聞かせくださいませ。",function(){$("tp").classList.add("on");$("tword").focus()});
   }
-  // 確認型：はい→属性を追加／いいえ→否定を記録して正しい属性を選ぶ（judge の既存処理）
-  function askYN(q,fw){
-    var key="attr:"+q.attr,fs=fillSlots(q,key,fw,true),w=fs.used[0];
-    var r={text:resolve(q.q,fs.out),use:[w],key:key,y:"そうだよ",n:"ちがうよ",yr:ATTRT[q.attr](w.text),learn:{w:w,attr:q.attr}};
-    say(r.text,function(){showChoices(r)});
-  }
-  // 入力型：属性に合うことばを入力してもらい、種類を選んでもらう（ASKS を使う）
-  function askAttr(){
-    var left=ASKS.filter(function(a){return asked.indexOf("t-"+a.id)<0});
-    if(!left.length){asked=asked.filter(function(id){return id.indexOf("t-")!==0});left=ASKS}
-    var a=pick(left);
-    pend={id:"t-"+a.id,attr:a.attr,end:a.end,lead:a.lead,q:a.q,ph:a.ph||"教えることば（例：ゴム手袋）"};
-    $("qtext").textContent=pend.q;$("ans").placeholder=pend.ph;$("ans").value="";$("qcat").value="";$("qcat").style.display="";
-    say(pend.q,function(){$("qa").classList.add("on");$("ans").focus()});
-  }
-  function answerAttr(list){
-    var c=$("qcat").value;
+  function closeT(){$("tp").classList.remove("on");tpend=null}
+  function submitT(){
+    if(!tpend)return;
+    var t=$("tword").value.trim(),c=$("tcat").value;
+    if(!t){say("どのようなことばでしょうか。");return}
     if(!c){say("どのような種類のことばか、お選びくださいませ。");return}
-    var a=pend;closeQ();stopIdle();
-    asked.push(a.id);
-    var ck=catOf(c).ctx;
-    list.forEach(function(t){
-      add(t,ck);
-      var w=words.filter(function(x){return x.text===t})[0];
-      w.cat=c;addAttr(w,a.attr);
-    });
+    var a=tpend;closeT();stopIdle();
+    var ck=catOf(c).ctx;add(t,ck);
+    var w=words.filter(function(x){return x.text===t})[0];
+    w.cat=c;w.attrs=w.attrs||[];if(w.attrs.indexOf(a.attr)<0)w.attrs.push(a.attr);
     save();render();joy();
-    var t=list[0];
-    var head=list.length>1?"「"+list.join("」「")+"」…すべて覚えました。":"";
     var lead=a.lead&&a.lead[ck]?a.lead[ck](t):(ck==="person"?t+"様…":t+"…");
-    say(head+lead+a.end);   // 評価の質問は出さない（teach() の入力時のみ）
+    say(lead+a.end,function(){
+      idleTimer=setTimeout(function(){if(catOf(c).norate)return;say(t+"ですわね！"+t+"はお好きでしょうか？",function(){showRate(w)})},800);
+    });
   }
 
   var GOOD=["まあ、嬉しゅうございます。","ふふ、安心いたしました。","ありがとうございます。"],
       CLOSE=["それでは、またのちほど。","では、ひとまず失礼いたしますね。ごきげんよう。","本日はこのあたりで。ごきげんよう。"];
   function judge(d){
     var r=last;last=null;showFb(false);stopIdle();
-    if(d>0){
-      if(r&&r.learn){addAttr(r.learn.w,r.learn.attr);save();render()}
+    if(d>0){if(r&&r.ask){openT(r.ask);return}
+      if(r&&r.learn){var L=r.learn;L.w.attrs=L.w.attrs||[];if(L.w.attrs.indexOf(L.attr)<0)L.w.attrs.push(L.attr);save();render()}
       joy();endTalk((r&&r.yr)||pick(GOOD));return}
     if(r){r.use.forEach(function(w){w.bad=w.bad||[];if(w.bad.indexOf(r.key)<0)w.bad.push(r.key)});
       if(!r.use.length&&r.key.indexOf("talk:")===0)badTalk.push(r.key.slice(5))}
@@ -894,7 +944,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   function showAttrChoices(L){
     var box=$("attr");box.innerHTML="";
-    (isRating(L.attr)?RATE_ATTRS:SLOT.t.d).filter(function(a){return a!==L.attr}).forEach(function(a){   // 外れた属性は除く
+    SLOT.t.d.filter(function(a){return a!==L.attr}).forEach(function(a){   // 外れた属性は除く
       var b=document.createElement("button");b.textContent=a;
       b.onclick=function(){pickAttr(L.w,a)};box.appendChild(b);
     });
@@ -904,7 +954,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   function pickAttr(w,a){
     $("attr").classList.remove("on");stopIdle();
-    addAttr(w,a);
+    w.attrs=w.attrs||[];if(w.attrs.indexOf(a)<0)w.attrs.push(a);
     save();render();joy();
     endTalk("なるほど、"+w.text+"は「"+a+"」なのですね。覚えましたわ。");
   }
@@ -919,6 +969,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     stopIdle();
     teach();
   };
+  $("tgo").onclick=submitT;
+  $("tcancel").onclick=function(){closeT();stopIdle();nope()};
   $("ansgo").onclick=answer;
   $("pass").onclick=function(){stopIdle();if(pend){asked.push(pend.id);save()}closeQ();say("さようでございますか。また、お聞かせくださいませ。")};
   $("speak").onclick=function(){
@@ -945,15 +997,14 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 
   // ---------- 端末をまたぐ「引き継ぎコード」 ----------
   function xmsg(t){$("xmsg").textContent=t}
-  function encodeData(){return "KP1:"+btoa(unescape(encodeURIComponent(JSON.stringify({words:words,asked:asked}))))}
+  function encodeData(){return "KP1:"+btoa(unescape(encodeURIComponent(JSON.stringify({words:words,asked:asked,trophies:trophies}))))}
   function cleanWord(x){
     if(!x||typeof x.text!=="string"||!x.text.trim()||x.text.length>60)return null;
     var strs=function(a){return Array.isArray(a)?a.filter(function(s){return typeof s==="string"&&s.length<40}).slice(0,40):[]};
     var w={text:x.text.trim(),ctx:strs(x.ctx),bad:strs(x.bad),attrs:strs(x.attrs).map(function(a){return a==="ふしぎ"?"不思議":a}).filter(function(a){return ATTRT[a]})};
     if(!w.ctx.length)w.ctx=["free"];
     if(CATS.some(function(c){return c.id===x.cat}))w.cat=x.cat;else fixCat(w);
-    var rs=w.attrs.filter(isRating);if(rs.length>1)w.attrs=w.attrs.filter(function(a){return !isRating(a)||a===rs[0]});   // 評価は1つだけ
-    if(x.like>=1&&x.like<=5&&!likeOf(w))addAttr(w,RATE_ATTRS[5-Math.round(x.like)]);   // 旧形式(like)の互換
+    if(x.like>=1&&x.like<=5)w.like=Math.round(x.like);
     return w;
   }
   function decodeData(s){
@@ -961,7 +1012,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if(s.indexOf("KP1:")!==0)throw new Error("format");
     var o=JSON.parse(decodeURIComponent(escape(atob(s.slice(4)))));
     if(!o||!Array.isArray(o.words))throw new Error("format");
-    return {words:o.words.slice(0,2000).map(cleanWord).filter(Boolean),asked:Array.isArray(o.asked)?o.asked.filter(function(a){return typeof a==="string"}):[]};
+    return {words:o.words.slice(0,2000).map(cleanWord).filter(Boolean),asked:Array.isArray(o.asked)?o.asked.filter(function(a){return typeof a==="string"}):[],trophies:Array.isArray(o.trophies)?o.trophies.filter(function(id){return TROPHIES.some(function(t){return t.id===id})}):[]};
   }
   function importData(replace){
     var d;
@@ -972,10 +1023,12 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       var ex=words.filter(function(w){return w.text===x.text})[0];
       if(!ex){words.push(x);return}
       x.ctx.forEach(function(c){if(ex.ctx.indexOf(c)<0)ex.ctx.push(c)});
-      x.attrs.forEach(function(a){if(isRating(a)&&likeOf(ex))return;addAttr(ex,a)});   // 評価は、無いときだけ取り込む
+      x.attrs.forEach(function(a){if((ex.attrs=ex.attrs||[]).indexOf(a)<0)ex.attrs.push(a)});
       if(!ex.cat&&x.cat)ex.cat=x.cat;
+      if(!ex.like&&x.like)ex.like=x.like;
     });
     d.asked.forEach(function(a){if(asked.indexOf(a)<0)asked.push(a)});
+    d.trophies.forEach(function(id){if(trophies.indexOf(id)<0)trophies.push(id)});
     save();render();joy();
     xmsg(d.words.length+"個のことばを"+(replace?"置き換えて":"統合して")+"読み込みました。");
     say("まあ…"+d.words.length+"個のことばを、受け取りました。大切にいたしますわ。");
@@ -1008,6 +1061,105 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   window.addEventListener("resize",fit);
   if(window.ResizeObserver)new ResizeObserver(fit).observe($("stage"));
   fit();
+
+  // ================= 小道具・トロフィー・ことばずかん =================
+  var LIKE_NAMES={5:"大好き",4:"好き",3:"普通",2:"嫌い",1:"大嫌い"};
+  function trophySVG(color){
+    return '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M7 3h10v4a5 5 0 0 1-10 0z" fill="'+color+'" stroke="#5a4a3a" stroke-width="1"/><path d="M7 4H3.5v2A4 4 0 0 0 7 10M17 4h3.5v2A4 4 0 0 1 17 10" fill="none" stroke="'+color+'" stroke-width="1.6"/><rect x="10.5" y="11.5" width="3" height="4.5" fill="'+color+'" stroke="#5a4a3a" stroke-width=".8"/><rect x="7" y="17" width="10" height="3.2" rx="1" fill="'+color+'" stroke="#5a4a3a" stroke-width=".8"/></svg>';
+  }
+  // --- お知らせ（トロフィー・飾りの追加）---
+  var toastQ=[],toastBusy=false;
+  function toast(html){toastQ.push(html);if(!toastBusy)nextToast()}
+  function nextToast(){
+    var h=toastQ.shift(),t=$("toast");
+    if(!h){toastBusy=false;t.hidden=true;return}
+    toastBusy=true;t.innerHTML=h;t.hidden=false;t.classList.remove("pop");void t.offsetWidth;t.classList.add("pop");
+    setTimeout(nextToast,3600);
+  }
+  // --- トロフィー：覚えた言葉が10・50・100個 ---
+  function checkTrophy(){
+    TROPHIES.forEach(function(t){
+      if(words.length>=t.n&&trophies.indexOf(t.id)<0){
+        trophies.push(t.id);save();joy();
+        toast('<span class="tr">'+trophySVG(t.color)+'</span><b>トロフィーを獲得しました！</b><small>'+t.label+'トロフィー（覚えた言葉 '+t.n+'語）</small>');
+      }
+    });
+  }
+  // --- 小道具：覚えた言葉5つにつき1つ、部屋に増える（本棚→スローガン→メモ の順）---
+  // --- 本棚：覚えた言葉5つにつき本が1冊増える。獲得したトロフィーも棚に飾る ---
+  var propCount=-1;
+  var BOOK_COLS=["#b55a4a","#4f7cac","#6a9a5b","#c9983a","#8a6bb0","#3f8f8a","#b0587e","#6b7f3a"];
+  function renderProps(){
+    var box=$("props"),n=Math.floor(words.length/5);
+    box.textContent="";
+    var shelf=mk("div","","prop shelf");
+    TROPHIES.forEach(function(t){                       // 獲得したトロフィー（棚の左端）
+      if(trophies.indexOf(t.id)>-1){var s=mk("span","","tr");s.innerHTML=trophySVG(t.color);s.title=t.label+"トロフィー";shelf.appendChild(s)}
+    });
+    var titles=[];
+    for(var i=0;i<n;i++){                               // 5語につき1冊：背表紙には、その5語のうち最も好きな言葉
+      var g=words.slice(i*5,i*5+5),best=g[g.length-1];
+      g.forEach(function(w){if((w.like||0)>(best.like||0))best=w});
+      var bk=mk("span",best.text,"book");
+      bk.style.background=BOOK_COLS[i%BOOK_COLS.length];
+      bk.style.height=(54+(i*7)%9)+"px";
+      bk.title=g.map(function(w){return w.text}).join("・");
+      if(propCount>=0&&i>=propCount)bk.classList.add("pop");
+      shelf.appendChild(bk);titles.push(best.text);
+    }
+    var tn=TROPHIES.filter(function(t){return trophies.indexOf(t.id)>-1}).map(function(t){return t.label+"トロフィー"});
+    shelf.setAttribute("role","img");
+    shelf.setAttribute("aria-label","本棚："+(tn.length?tn.join("、")+"、":"")+(titles.length?titles.join("、"):"本はまだありません"));
+    box.appendChild(shelf);
+    if(!n)box.appendChild(mk("div","ことばを5つ覚えるごとに、本棚に本が1冊増えていきます","propHint"));
+    if(propCount>=0&&n>propCount){
+      toast('<b>本棚に本が増えました</b><small>覚えた言葉 '+words.length+'語（'+n+'冊）</small>');
+      if(box.scrollTo)box.scrollTo({left:box.scrollWidth,behavior:"smooth"});
+    }
+    propCount=n;
+  }
+  // --- ことばずかん：カテゴリーごとに分類して表示し、その場で訂正できる ---
+  var zOpen=false,zEdit=null,zFocus=null;
+  function openZukan(){stopIdle();zOpen=true;zEdit=null;zFocus=document.activeElement;$("zukan").hidden=false;document.body.style.overflow="hidden";renderZukan();$("zclose").focus()}
+  function closeZukan(){zOpen=false;zEdit=null;$("zukan").hidden=true;document.body.style.overflow="";if(zFocus&&zFocus.focus)zFocus.focus();startIdle(5000)}
+  function renderZukan(){
+    var body=$("zbody");body.textContent="";
+    var by={},unk=[];
+    words.forEach(function(w){if(w.cat&&catOf0(w.cat))(by[w.cat]=by[w.cat]||[]).push(w);else unk.push(w)});
+    var filled=CATS.filter(function(c){return by[c.id]}).length;
+    $("zsum").textContent="覚えたことば "+words.length+"語 ／ "+CATS.length+"カテゴリーのうち "+filled+"つで登場";
+    var tr=$("ztro");tr.textContent="";
+    TROPHIES.forEach(function(t){
+      var on=trophies.indexOf(t.id)>-1,s=mk("span","","ztr"+(on?"":" off"));
+      s.innerHTML=trophySVG(on?t.color:"#9aa0aa");s.appendChild(mk("small",on?t.label:t.n+"語で"));tr.appendChild(s);
+    });
+    function group(label,arr){
+      var sec=mk("section","","zsec");sec.appendChild(mk("h3",label+"（"+arr.length+"）"));
+      var ul=mk("ul","","zlist");
+      arr.forEach(function(w){
+        var li=mk("li");
+        if(zEdit===w){buildEditor(li,w,function(){zEdit=null});ul.appendChild(li);return}
+        li.appendChild(document.createTextNode(w.text+" "));
+        if(w.attrs&&w.attrs.length)li.appendChild(mk("small","（"+w.attrs.join("・")+"）"));
+        if(w.like)li.appendChild(mk("small","［"+LIKE_NAMES[w.like]+"］"));
+        var eb=mk("button","訂正"),xb=mk("button","×");
+        eb.setAttribute("aria-label",w.text+"を訂正する");xb.setAttribute("aria-label",w.text+"をわすれさせる");
+        eb.onclick=function(){zEdit=w;renderZukan()};
+        xb.onclick=function(){words.splice(words.indexOf(w),1);save();render();say("「"+w.text+"」…あら、何でしたかしら。")};
+        li.appendChild(eb);li.appendChild(xb);ul.appendChild(li);
+      });
+      sec.appendChild(ul);body.appendChild(sec);
+    }
+    if(!words.length)body.appendChild(mk("p","まだ、ことばを存じません…","hint"));
+    CATS.forEach(function(c){if(by[c.id])group(c.label,by[c.id])});
+    if(unk.length)group("未分類（種類はおまかせ）",unk);
+    var empty=CATS.filter(function(c){return !by[c.id]}).map(function(c){return c.label});
+    if(empty.length)body.appendChild(mk("p","まだ空のカテゴリー："+empty.join("、"),"hint"));
+  }
+  $("zukanBtn").onclick=openZukan;
+  $("zclose").onclick=closeZukan;
+  $("zukan").addEventListener("click",function(e){if(e.target===this)closeZukan()});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&zOpen)closeZukan()});
 
   draw();render();stopIdle();
   ["pointerdown","keydown","input","focusin"].forEach(function(ev){
