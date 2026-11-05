@@ -187,6 +187,33 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 <script>
 (function(){
   var KEY="kotoba-hakoiri-v2";
+  // ===== 言葉のカテゴリー：ここが唯一の定義 =====
+  // id／label=表示名／ctx=セリフの文脈／def=default単語／norate=お好みを聞かない／home=その文脈の標準カテゴリー
+  var CATS=[
+    {id:"greet",label:"出会いの挨拶",ctx:"greet",def:"ごきげんよう",norate:true,home:true},
+    {id:"bye",label:"別れの挨拶",ctx:"bye",def:"さらばだ",norate:true,home:true},
+    {id:"celeb",label:"有名人",ctx:"person",def:"朝永振一郎"},
+    {id:"name",label:"人の名前",ctx:"person",def:"S.R.White",home:true},
+    {id:"job",label:"職業",ctx:"free",def:"マジ物理学者"},
+    {id:"people",label:"人を表す言葉",ctx:"free",def:"バケモン"},
+    {id:"do",label:"すること",ctx:"action",def:"密度行列繰り込み群",home:true},
+    {id:"done",label:"されること",ctx:"free",def:"偏微分"},
+    {id:"go",label:"場所",ctx:"place",def:"研究室",home:true},
+    {id:"fnd",label:"食べ物",ctx:"food",def:"チョコエッグ",home:true},
+    {id:"drink",label:"飲み物",ctx:"food",def:"カレー"},
+    {id:"live",label:"生き物",ctx:"animal",def:"井上トロ",home:true},
+    {id:"music",label:"音楽",ctx:"free",def:"足立レイ"},
+    {id:"see",label:"見るもの",ctx:"thing",def:"本質"},
+    {id:"read",label:"読むもの",ctx:"free",def:"ファインマン物理学"},
+    {id:"use",label:"使うもの",ctx:"thing",def:"Macbook Neo"},
+    {id:"wear",label:"身につけるもの",ctx:"thing",def:"オーラ"},
+    {id:"ride",label:"乗り物",ctx:"free",def:"トゥクトゥク"},
+    {id:"mutter",label:"つぶやき",ctx:"mutter",def:"オイオイ…",norate:true,home:true},
+    {id:"body",label:"体の一部",ctx:"free",def:"臀部"},
+    {id:"ill",label:"病気",ctx:"free",def:"インフルエンザA型"},
+    {id:"thing",label:"モノ",ctx:"thing",def:"中性脂肪",home:true}
+  ];
+  var catOf=function(id){return CATS.filter(function(c){return c.id===id})[0]||CATS[CATS.length-1]};
   var words=[],asked=[],trophies=null;
   try{
     var s=JSON.parse(localStorage.getItem(KEY)||"null");
@@ -196,7 +223,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }catch(e){}
   words.forEach(function(w){if(w.attrs)w.attrs=w.attrs.map(function(a){return a==="ふしぎ"?"不思議":a})});
   // 旧データ互換：cat を持たないことばは、ctx から cat を補う
-  var CTXCAT={food:"fnd",animal:"live",greet:"greet",mood:"mutter",holiday:"do",action:"do",place:"go",night:"bye",bye:"bye",person:"name",thing:"thing"};
+  var CTXCAT={mood:"mutter",holiday:"do",night:"bye"};          // 旧バージョンだけにあった文脈名
+  CATS.forEach(function(c){if(c.home)CTXCAT[c.ctx]=c.id});         // home 付きが、その文脈の標準カテゴリー
   function fixCat(w){if(w.cat)return;for(var i=0;i<(w.ctx||[]).length;i++){if(CTXCAT[w.ctx[i]]){w.cat=CTXCAT[w.ctx[i]];return}}}
   words.forEach(fixCat);
   var TROPHIES=[{id:"bronze",n:10,label:"ブロンズ",color:"#cd7f32"},{id:"silver",n:50,label:"シルバー",color:"#c0c7d1"},{id:"gold",n:100,label:"ゴールド",color:"#f2c230"}];
@@ -582,12 +610,12 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // 話しかけられたときの自分語り：3文がひとつの筋でつながる「お話」
   // スロット  k=古文のタイトル  c=任意のことば  p=人名  a=動作
   // 各カテゴリーのdefault単語（教わった言葉がないときの補い）
-  var DEFS={greet:"ごきげんよう",bye:"さらばだ",celeb:"朝永振一郎",name:"S.R.White",job:"マジ物理学者",people:"バケモン",do:"密度行列繰り込み群",done:"偏微分",go:"研究室",fnd:"チョコエッグ",drink:"カレー",live:"井上トロ",music:"足立レイ",see:"本質",read:"ファインマン物理学",use:"Macbook Neo",wear:"オーラ",ride:"トゥクトゥク",mutter:"オイオイ…",body:"臀部",ill:"インフルエンザA型",thing:"中性脂肪"};
+  var DEFS={};CATS.forEach(function(c){DEFS[c.id]=c.def});   // default単語は CATS が唯一の定義
   var K_DEF=["竹取","源氏","伊勢","宇治拾遺"];
   var STORIES=[
     {id:"koten",slots:["k","p","p","a"],
       f:function(k,p,q,a){return "昨日、授業で、"+k+"物語を習いました。"+p+"に一目惚れをした"+q+"が、"+a+"でアプローチするんですの。とってもロマンチックですわ！"},
-      y:"素敵だね|ロマンチックだね",n:"？？？",yr:"きゃあ〜♡胸キュンですわ〜♡",nr:"この感動をSNSで共有しなきゃですわ!"},
+      y:"素敵だね|ロマンチックだね",n:"？？？",yr:"きゃあ〜♡胸キュンですわ〜♡",nr:"この感動を皆に共有しなきゃですわ!"},
     {id:"kagaku",slots:["p","a","c"],
       f:function(p,a,c){return "そういえば、"+p+"様の論文を読みましたわ。"+p+"様は、"+a+"をきっかけに、"+c+"を発見なさったそうですわ！"},
       y:"そうなんだ",n:"えぇ…",yr:"わたくしも続きますわ！",nr:"すごい発見ですのよ！"},
@@ -604,7 +632,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"niji",slots:["c","a"],
       f:function(c){return "あの、あの、虹の根元には、宝物が埋まっているのだそうですわ。きっと、"+c+"に違いありませんわ！"},
       y:"間違いない",n:"非現実的だよ",yr:"早速、虹を作りますわ！",nr:"ロマンに欠けますわ…"},
-    {id:"tsuki",slots:["c","a"],
+    {id:"tsuki",slots:["g","l","d"],
       f:function(g,l,d){return "あの、あの、"+g+"には"+l+"が住んでいて、"+d+"をしているそうですわ！"},
       y:"そうなの？",n:"そんなことないよ",yr:"秘密発見！ですわ。",nr:"えっ…夢が壊れますわ…"},
     // ---- ことばのカテゴリーを組み合わせた、ひとこと自分語り ----
@@ -1049,25 +1077,31 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // ---------- しつもん ----------
   var QSLOT_RATE=0.4;   // スロット付き質問（ことばを使う質問）を出す頻度
   var QS=[
-    {id:"food",base:"food",slots:["g"],q:function(g){return g+"に行きましたら、何を食べたいでしょうか？"}},
-    {id:"animal",base:"animal",slots:["g"],q:function(g){return g+"には、どんな生き物が住んでいるのでしょう？"}},
-    {id:"mood",base:"mood",slots:["e"],q:function(e){return e+"!本日のお気持ちは、いかがですか？"}},
-    {id:"greet",base:"greet",q:"お友達とお会いした際は、どのようにご挨拶なさいますか？"},
-    {id:"holiday",base:"do",slots:["j"],q:function(j){return j+"って、何をするお仕事ですか？"}},
-    {id:"place",base:"go",slots:["h"],q:function(h){return h+"様とご一緒なら、どこへ行きたいですか？"}},
-    {id:"house",base:"go",slots:["h"],q:function(h){return h+"様は、どこにいらっしゃるのでしょう？"}},
-    {id:"person",base:"people",q:"憧れの人は、いらっしゃいますか？"},
-    {id:"illness",base:"ill",slots:["a"],q:function(a){return "最近、"+a+"が止まりませんの…わたくし、何かの病気なんでしょうか？"}},
-    {id:"done",base:"done",q:"誰かにされて、嬉しいことは何ですか？"},
-    {id:"art",base:"see",q:"最近見て、感動したものはありますか？"},
-    {id:"book",base:"read",q:"わたくし、次に読む本を探していますの。おすすめの本はございますか？"},
-    {id:"ride",base:"ride",slots:["g"],q:function(g){return g+"まで行くには、どんな乗り物が必要ですか？"}},
-    {id:"yashoku",base:"fnd",q:"…これは内緒ですが、今夜のお夜食は何が良いと思いますか？"},
-    {id:"drink",base:"drink",slots:["a"],q:function(a){return a+"した後に飲みたいものは何ですか？"}},
-    {id:"mutter",base:"mutter",slots:["a"],q:function(a){return a+"するときに、つい出てしまう口癖はありますか？"}},
-    {id:"thing",base:"thing",slots:["h"],q:function(h){return "もし、もしですわよ？"+h+"様にプレゼントするなら、何が良いでしょうか？"}},
-    {id:"wear",base:"wear",q:"おしゃれするときに着るものって、どんなものでしょうか？"},
-    {id:"use",base:"use",q:"最近、「コレ使えるな」と思ったものはありますか？"}
+    {id:"food",slots:["g"],q:function(g){return g+"に行きましたら、何を食べたいでしょうか？"},cat:"fnd"},
+    {id:"animal",slots:["g"],q:function(g){return g+"には、どんな生き物が住んでいるのでしょう？"},cat:"live"},
+    {id:"mood",slots:["e"],q:function(e){return e+"！本日はどちらまで行かれますか？"},cat:"go"},
+    {id:"greet",q:"お友達とお会いした際は、どのようにご挨拶なさいますか？",cat:"greet"},
+    {id:"holiday",slots:["j"],q:function(j){return j+"って、何をするお仕事ですか？"},cat:"do"},
+    {id:"house",slots:["h"],q:function(h){return h+"様は、どこにいらっしゃるのでしょう？"},cat:"go"},
+    {id:"person",q:"憧れの人は、いらっしゃいますか？",cat:"celeb",   // 答えのあと、有名人かどうかを選んでもらう
+      choose:[["celeb","有名人だよ"],["name","そうでもない"]],
+      choosePrompt:function(t){return "「"+t+"」様は、有名な方でいらっしゃいますか？"}},
+    {id:"illness",slots:["a"],q:function(a){return "最近、"+a+"が止まりませんの…わたくし、何かの病気なんでしょうか？"},cat:"ill"},
+    {id:"done",q:"誰かにされて、嬉しいことは何ですか？",cat:"done"},
+    {id:"art",q:"最近見て、感動したものはありますか？",cat:"see"},
+    {id:"book",q:"わたくし、次に読む本を探していますの。おすすめの本はございますか？",cat:"read"},
+    {id:"ride",slots:["g"],q:function(g){return g+"まで行くには、どんな乗り物が必要ですか？"},cat:"ride"},
+    {id:"yashoku",q:"…これは内緒ですが、今夜のお夜食は何が良いと思いますか？",cat:"fnd"},
+    {id:"drink",slots:["a"],q:function(a){return a+"した後に飲みたいものは何ですか？"},cat:"drink"},
+    {id:"mutter",slots:["a"],q:function(a){return a+"するときに、つい出てしまう口癖はありますか？"},cat:"mutter"},
+    {id:"thing",slots:["h"],q:function(h){return "もし、もしですわよ？"+h+"様にプレゼントするなら、何が良いでしょうか？"},cat:"thing"},
+    {id:"wear",q:"おしゃれするときに着るものって、どんなものでしょうか？",cat:"wear"},
+    {id:"use",q:"最近、「コレ使えるな」と思ったものはありますか？",cat:"use"},
+    {id:"bye",q:"お友達とお別れする時には、何と言えば良いのでしょう？",cat:"bye"},
+    {id:"job",q:"わたくしたちが感謝すべきお仕事は、何でしょうか？",cat:"job"},
+    {id:"music",q:"最近、どんな音楽を聴いていらっしゃいますか？",cat:"music"},
+    {id:"body",slots:["a"],q:function(a){return a+"するとき、体のどこを一番使いますか？"},cat:"body"},
+    {id:"name",q:"あなた様のご友人のお名前を教えていただけますか？",cat:"name"}
   ];
   // スロット付き質問は、教わったことばが足りないと成立しない
   function qEligible(q){return q.slots.every(function(k){var sl=SLOT[k];return sl.attr||slotPool(sl,"q:"+q.id,[]).length>0})}
@@ -1081,13 +1115,12 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     var pool=(dyn.length&&Math.random()<QSLOT_RATE)?dyn:(plain.length?plain:dyn);
     if(!pool.length){asked=[];pool=QS.filter(function(q){return !q.slots})}
     var q=pick(pool),fs=q.slots?fillSlots(q,"q:"+q.id,null,true):{out:[]};
-    pend={id:q.id,base:q.base||q.id,q:resolve(q.q,fs.out),ph:q.ph||""};   // 文は一度だけ解決する
+    pend={id:q.id,cat:q.cat,choose:q.choose,choosePrompt:q.choosePrompt,q:resolve(q.q,fs.out),ph:q.ph||""};   // 文は一度だけ解決する
     $("qtext").textContent=pend.q;$("ans").placeholder=pend.ph;$("ans").value="";
     say(pend.q,function(){$("qa").classList.add("on");$("ans").focus()});
   }
   function closeQ(){$("qa").classList.remove("on");pend=null}
 
-  var QCAT={food:"fnd",animal:"live",greet:"greet",mood:"mutter",holiday:"do",place:"go",night:"bye",person:"name",action:"do",bye:"bye"};
   function add(t,c,cat){
     var ex=words.filter(function(w){return w.text===t})[0];
     if(ex){if(cat)ex.cat=cat;if(ex.ctx.indexOf(c)<0)ex.ctx.push(c);ex.bad=(ex.bad||[]).filter(function(k){return k!==c});return "up"}
@@ -1097,13 +1130,31 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if(!pend)return;stopIdle();
     var list=$("ans").value.split(/[、,，\n]+/).map(function(t){return t.trim()}).filter(Boolean);
     if(!list.length){say("…お答えいただけますでしょうか。");return}
-    var res=list.map(function(t){return add(t,pend.base,QCAT[pend.base])});
-    asked.push(pend.id);save();render();joy();
-    var id=pend.id;closeQ();
+    var p=pend,ctx=catOf(p.cat).ctx;                        // 質問の cat から、カテゴリーと文脈を1か所で決める
+    var res=list.map(function(t){return add(t,ctx,p.cat)});
+    asked.push(p.id);save();render();closeQ();
+    if(p.choose){askKind(p,list);return}                    // 選択肢で分類を確かめる質問
+    joy();react(list,res);
+  }
+  function react(list,res){
     var w=words.filter(function(x){return x.text===list[0]})[0];
-    var head=list.length>1?"「"+list.join("」「")+"」…すべて覚えました。":"「"+list[0]+"」…"+(res[0]==="up"?"存じておりますが、あらためて覚えました。":"覚えました。");
+    var head=list.length>1?"「"+list.join("」「")+"」…すべて覚えました。":"「"+list[0]+"」…"+(res&&res[0]==="up"?"存じておりますが、あらためて覚えました。":"覚えました。");
     var r=talkLong(w);
     say(head+r.text,function(){showChoices(r)});
+  }
+  // 答えの直後に「どのカテゴリーか」を選んでもらう（例：有名人かどうか）。選ばれたら、カテゴリーを付け替える
+  function askKind(p,list){
+    var box=$("attr");box.innerHTML="";
+    p.choose.forEach(function(o){
+      var b=document.createElement("button");b.textContent=o[1];
+      b.onclick=function(){
+        box.classList.remove("on");stopIdle();
+        list.forEach(function(t){var w=words.filter(function(x){return x.text===t})[0];if(w){w.cat=o[0];w.ctx=[catOf(o[0]).ctx]}});
+        save();render();joy();react(list);
+      };
+      box.appendChild(b);
+    });
+    say(p.choosePrompt?p.choosePrompt(list.join("・")):"「"+list.join("・")+"」は、どちらでしょうか？",function(){box.classList.add("on")});
   }
 
   // ---------- 操作 ----------
@@ -1121,20 +1172,6 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   // ---------- ことばのカテゴリーと「お好きでしょうか？」の5段階評価 ----------
   // ctx＝そのカテゴリーの言葉が文の中で使われるときの文脈
-  var CATS=[
-    {id:"greet",label:"出会いの挨拶",ctx:"greet",norate:true},{id:"bye",label:"別れの挨拶",ctx:"bye",norate:true},
-    {id:"celeb",label:"有名人",ctx:"person"},{id:"name",label:"人の名前",ctx:"person"},
-    {id:"job",label:"職業",ctx:"free"},{id:"people",label:"人を表す言葉",ctx:"free"},
-    {id:"do",label:"すること",ctx:"action"},{id:"done",label:"されること",ctx:"free"},
-    {id:"go",label:"場所",ctx:"place"},{id:"fnd",label:"食べ物",ctx:"food"},
-    {id:"drink",label:"飲み物",ctx:"food"},{id:"live",label:"生き物",ctx:"animal"},
-    {id:"music",label:"音楽",ctx:"free"},{id:"see",label:"見るもの",ctx:"thing"},
-    {id:"read",label:"読むもの",ctx:"free"},{id:"use",label:"使うもの",ctx:"thing"},
-    {id:"wear",label:"身につけるもの",ctx:"thing"},{id:"ride",label:"乗り物",ctx:"free"},
-    {id:"mutter",label:"つぶやき",ctx:"mutter",norate:true},{id:"body",label:"体の一部",ctx:"free"},
-    {id:"ill",label:"病気",ctx:"free"},{id:"thing",label:"モノ",ctx:"thing"}
-  ];
-  var catOf=function(id){return CATS.filter(function(c){return c.id===id})[0]||CATS[CATS.length-1]};
   CATS.forEach(function(c){["tcat","kind"].forEach(function(id){var o=document.createElement("option");o.value=c.id;o.textContent=c.label;$(id).appendChild(o)})});
   var LIKE={
     5:function(n){return "あなた様は、"+n+"が大好きなのですよね。"},
@@ -1234,8 +1271,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if(r){r.use.forEach(function(w){w.bad=w.bad||[];if(w.bad.indexOf(r.key)<0)w.bad.push(r.key)});
       if(!r.use.length&&r.key.indexOf("talk:")===0)badTalk.push(r.key.slice(5))}
     save();
-    if(r&&r.learn){say((r&&r.nr)||"そうなんですね。",function(){showAttrChoices(r.learn)});return}   // 否定→正しい属性を選んでもらう
-    endTalk((r&&r.nr)||"そうなんですね。");
+    if(r&&r.learn){say((r&&r.nr)||"そうですか。",function(){showAttrChoices(r.learn)});return}   // 否定→正しい属性を選んでもらう
+    endTalk((r&&r.nr)||"そうですか。");
   }
   function showAttrChoices(L){
     var box=$("attr");box.innerHTML="";
@@ -1244,7 +1281,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       b.onclick=function(){pickAttr(L.w,a)};box.appendChild(b);
     });
     var o=document.createElement("button");o.textContent="どれでもないよ";
-    o.onclick=function(){box.classList.remove("on");endTalk("そうなんですね。")};box.appendChild(o);
+    o.onclick=function(){box.classList.remove("on");endTalk("そうですか。")};box.appendChild(o);
     box.classList.add("on");
   }
   function pickAttr(w,a){
@@ -1267,7 +1304,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   $("tgo").onclick=submitT;
   $("tcancel").onclick=function(){closeT();stopIdle();nope()};
   $("ansgo").onclick=answer;
-  $("pass").onclick=function(){stopIdle();if(pend){asked.push(pend.id);save()}closeQ();say("さようでございますか。また、お聞かせくださいませ。")};
+  $("pass").onclick=function(){stopIdle();if(pend){asked.push(pend.id);save()}closeQ();say("そうですか。また、お聞かせくださいませ。")};
   $("speak").onclick=function(){
     stopIdle();
     speak();
@@ -1311,7 +1348,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   function importData(replace){
     var d;
-    try{d=decodeData($("xcode").value)}catch(e){xmsg("読み込めませんでした。引き継ぎコード（KP1:で始まる文字列）を、すべて貼り付けてください。");return}
+    try{d=decodeData($("xcode").value)}catch(e){xmsg("読み込めませんでした。引き継ぎコード（KP1:で始まる文字列）を、すべて貼り付けてください。大文字で始まります。");return}
     stopIdle();
     if(replace){words=[];asked=[]}
     d.words.forEach(function(x){
@@ -1454,6 +1491,15 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   $("zclose").onclick=closeZukan;
   $("zukan").addEventListener("click",function(e){if(e.target===this)closeZukan()});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&zOpen)closeZukan()});
+
+  // 起動時の自己点検：定義のずれ（書き間違い）をコンソールに警告する
+  (function(){
+    var ids={};
+    CATS.forEach(function(c){if(ids[c.id])console.warn("[カテゴリー] idが重複しています:",c.id);ids[c.id]=1;if(!c.def)console.warn("[カテゴリー] default単語がありません:",c.id)});
+    QS.forEach(function(q){[q.cat].concat((q.choose||[]).map(function(o){return o[0]})).forEach(function(c){if(!ids[c])console.warn("[QS] 未定義のcatです:",q.id,c)})});
+    Object.keys(SLOT).forEach(function(k){(SLOT[k].cat||[]).forEach(function(c){if(!ids[c])console.warn("[SLOT] 未定義のcatです:",k,c)})});
+    Object.keys(CTXCAT).forEach(function(k){if(!ids[CTXCAT[k]])console.warn("[CTXCAT] 未定義のcatです:",k,CTXCAT[k])});
+  })();
 
   draw();render();stopIdle();
   ["pointerdown","keydown","input","focusin"].forEach(function(ev){
