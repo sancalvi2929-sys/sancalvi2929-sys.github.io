@@ -578,8 +578,6 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   // ---------- ことばの使い方（入力はすべて名詞として扱う） ----------
   var pick=function(a){return a[Math.floor(Math.random()*a.length)]};
   // ---------- キャラクター設定にもとづくお話----------
-  // 設定：生まれてからずっと箱の中で過ごしてきた13歳。外の世界への好奇心が強く、
-  //       いつか出会う殿方や世間の恋人たちを想像するロマンチスト。学校はオンライン。
   // s=ことばなしの文 / w=覚えた言葉を使う文 / y,n=プレイヤーの返事の候補
   // 話しかけられたときの自分語り：3文がひとつの筋でつながる「お話」
   // スロット  k=古文のタイトル  c=任意のことば  p=人名  a=動作
@@ -590,8 +588,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"koten",slots:["k","p","p","a"],
       f:function(k,p,q,a){return "昨日、授業で、"+k+"物語を習いました。"+p+"に一目惚れをした"+q+"が、"+a+"でアプローチするんですの。とってもロマンチックですわ！"},
       y:"素敵だね|ロマンチックだね",n:"？？？",yr:"きゃあ〜♡胸キュンですわ〜♡",nr:"この感動をSNSで共有しなきゃですわ!"},
-    {id:"kagaku",slots:["p","c"],
-      f:function(p,a,c){return "昨日、授業で、"+p+"様の研究を学びました。"+p+"様は、"+a+"をきっかけに、"+c+"発見をなさったのだそうです。"},
+    {id:"kagaku",slots:["p","a","c"],
+      f:function(p,a,c){return "そういえば、"+p+"様の論文を読みましたわ。"+p+"様は、"+a+"をきっかけに、"+c+"を発見なさったそうですわ！"},
       y:"そうなんだ",n:"えぇ…",yr:"わたくしも続きますわ！",nr:"すごい発見ですのよ！"},
     {id:"yume",slots:["p","a","c"],
       f:function(p,c,a){return "この頃ずっと、同じ夢を見ております。"+p+"様が"+c+"の中から"+a+"をしてきますの。"},
@@ -702,8 +700,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"ctx-person-0",slots:["p","x"],need:1,f:function(a,b){return a+"様から、"+b+"を頂きましたわ！"},y:function(a,b){return b+"を？"},n:function(a,b){return b+"を！？"},yr:"ずっと、大切にしますわ。",nr:"何の因果で、わたくしにコレを与えられたのでしょう？"},
     {id:"ctx-person-1",slots:["p","b"],need:1,f:function(a,b){return "いつか"+a+"様のような、立派な方になりとうございますわ。"},y:"なれるさ",n:"きっとね",yr:function(a,b){return "まずは、"+b+"を鍛えますわ！"},nr:"夢はでっかく、ですわ。"},
     {id:"ctx-action-0",slots:["a","p"],need:1,f:function(a,b){return a+"を極めとうございますわ。"},y:"教えてあげる",n:"まだ早い",yr:function(a,b){return "打倒"+b+"様！ですわ！"},nr:function(a,b){return "そんな…わたくしは早く"+b+"様と並び立ちたいのです！"}},
-    {id:"ctx-action-1",slots:["a","b"],need:1,f:function(a){return "毎朝、"+a+"の修行をしておりますわ。"},y:"元気だね",n:"やめるんだ",yr:function(a,b){return "おかげで"+b+"が軽いですわ〜！"},nr:function(a,b){return "せっかく"+b+"がカチカチになってきてまいりましたのに…"}},
-    {id:"talk-yesterday-s0",slots:["c","p"],f:function(a,b){return a+"についての論文がたくさん見つかりましたわ！？"},y:function(a,b){return b+"の専門だね"},n:"今や誰でもできちゃうんだよね",yr:function(a,b){return b+"様ってすごいですわね…"},nr:"思ってたよりハードル低いんですのね？"},
+    {id:"ctx-action-1",slots:["a","b"],need:1,f:function(a){return "毎朝、"+a+"の修行をしておりますわ。"},y:"元気だね",n:"やめるんだ",yr:function(a,b){return b+"を鍛え上げますわ〜！"},nr:function(a,b){return "ふふ…わたくしの鍛え上げられた"+b+"に恐れをなしていらっしゃるようで…"}},
+    {id:"talk-yesterday-s0",slots:["c","p"],f:function(a,b){return a+"についての論文がたくさん見つかりましたわ！？"},y:function(a,b){return b+"の専門だね"},n:"今や誰でもできちゃうんだよね",yr:function(a,b){return b+"様ってすごいですわね…"},nr:"ひえぇ…皆様凄まじいですわ…？"},
     {id:"talk-yesterday-w0",slots:["c","g","g"],need:1,f:function(a,b,c){return "次の"+a+"の国際会議、"+b+"みたいですわ！？"},y:"行った方がいい",n:"ちょっと遠いか",yr:"ポスターの1枚ぐらい、間に………間に…合…わせますわ!!!",nr:function(a,b,c){return "せめて…せめて"+c+"なら…"}},
     {id:"talk-yesterday-w1",slots:["c"],need:1,f:function(n){return n+"ノートが3冊目に突入しましたわ。"},y:"やるね",n:"何をしているの？",yr:"何か、何か掴めそうなのです！",nr:"ええ、本当に…"}
   ];
@@ -1049,18 +1047,27 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
 
   // ---------- しつもん ----------
-  var QSLOT_RATE=0.1;   // スロット付き質問（ことばを使う質問）を出す頻度
+  var QSLOT_RATE=0.4;   // スロット付き質問（ことばを使う質問）を出す頻度
   var QS=[
-    {id:"food",base:"food",slots:["g"],q:function(g){return g+"に行きましたら、何を食べたいでしょうか？"},ph:"例：しめさば"},
-    {id:"animal",base:"animal",slots:["l"],q:function(l){return l+"には、どんな生き物が住んでいるのでしょう？"},ph:"例：毒チワワ"},
-    {id:"greet",q:"お友達とお会いした際は、どのようにご挨拶なさいますか？",ph:""},
-    {id:"mood",q:"本日のお気持ちは、いかがですか？",ph:"例：最高"},
-    {id:"holiday",q:"お休みの日は、何をなさいますか？",ph:"例：感謝の正拳突き"},
-    {id:"place",q:"お好きな場所はどこでしょうか？",ph:"例：月の裏側"},
-    {id:"night",q:"夜、お休みになる前には、何とおっしゃいますか？",ph:"例：おやすみ"},
-    {id:"person",q:"憧れの人は、いらっしゃいますか？",ph:"例：朝永振一郎"},
-    {id:"action",q:"特技や、得意なことは何でしょうか？",ph:"例：感謝の正拳突き"},
-    {id:"bye",q:"お友達とお別れする時には、何と言えば良いのでしょう？",ph:"例：ごきげんよう"}
+    {id:"food",base:"food",slots:["g"],q:function(g){return g+"に行きましたら、何を食べたいでしょうか？"}},
+    {id:"animal",base:"animal",slots:["g"],q:function(g){return g+"には、どんな生き物が住んでいるのでしょう？"}},
+    {id:"mood",base:"mood",slots:["e"],q:function(e){return e+"!本日のお気持ちは、いかがですか？"}},
+    {id:"greet",base:"greet",q:"お友達とお会いした際は、どのようにご挨拶なさいますか？"},
+    {id:"holiday",base:"do",slots:["j"],q:function(j){return j+"って、何をするお仕事ですか？"}},
+    {id:"place",base:"go",slots:["h"],q:function(h){return h+"様とご一緒なら、どこへ行きたいですか？"}},
+    {id:"house",base:"go",slots:["h"],q:function(h){return h+"様は、どこにいらっしゃるのでしょう？"}},
+    {id:"person",base:"people",q:"憧れの人は、いらっしゃいますか？"},
+    {id:"illness",base:"ill",slots:["a"],q:function(a){return "最近、"+a+"が止まりませんの…わたくし、何かの病気なんでしょうか？"}},
+    {id:"done",base:"done",q:"誰かにされて、嬉しいことは何ですか？"},
+    {id:"art",base:"see",q:"最近見て、感動したものはありますか？"},
+    {id:"book",base:"read",q:"わたくし、次に読む本を探していますの。おすすめの本はございますか？"},
+    {id:"ride",base:"ride",slots:["g"],q:function(g){return g+"まで行くには、どんな乗り物が必要ですか？"}},
+    {id:"yashoku",base:"fnd",q:"…これは内緒ですが、今夜のお夜食は何が良いと思いますか？"},
+    {id:"drink",base:"drink",slots:["a"],q:function(a){return a+"した後に飲みたいものは何ですか？"}},
+    {id:"mutter",base:"mutter",slots:["a"],q:function(a){return a+"するときに、つい出てしまう口癖はありますか？"}},
+    {id:"thing",base:"thing",slots:["h"],q:function(h){return "もし、もしですわよ？"+h+"様にプレゼントするなら、何が良いでしょうか？"}},
+    {id:"wear",base:"wear",q:"おしゃれするときに着るものって、どんなものでしょうか？"},
+    {id:"use",base:"use",q:"最近、「コレ使えるな」と思ったものはありますか？"}
   ];
   // スロット付き質問は、教わったことばが足りないと成立しない
   function qEligible(q){return q.slots.every(function(k){var sl=SLOT[k];return sl.attr||slotPool(sl,"q:"+q.id,[]).length>0})}
@@ -1162,14 +1169,21 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       end:"トキメキが止まりませんわ〜♡",
       lead:{thing:function(n){return "お揃いの"+n+"…"},food:function(n){return "二人で"+n+"をいただくなんて…"},person:function(n){return n+"様からだなんて…"},animal:function(n){return n+"と一緒だなんて…"},action:function(n){return "二人で"+n+"をするなんて…"},place:function(n){return n+"へ二人で参るなんて…"}}},
     {id:"cool",attr:"かっこいい",
-      q:"最近のトレンドは、かっこいいで爆モテ！だそうですの。かっこいいものって何がありますでしょうか？",
+      q:"最近のトレンドは、かっこいいで爆モテ！だそうですの。イマドキのかっこいいものって何でしょう？",
       end:"それですわ〜！これでわたくしも爆モテですわ〜♡"},
     {id:"cute",attr:"かわいい",
-      q:"わたくし、かわいいものが大好きなのです。お気に入りは、専用のかわいいフォルダで管理しておりますの。",
+      q:"わたくし、かわいいものが大好きなのです。お気に入りは、専用のかわいいフォルダで管理しておりますの。例えば…",
+      yb:"あててみせよう",nb:"ふーん",
       end:"看破されていらしたのですね。ちょっと気恥ずかしいですわ。"},
     {id:"odd",attr:"不思議",
       q:"わたくしの身の回りは、不思議で溢れておりますわ。あなた様はいかがですか？",
-      end:"次から次へと…ふふ、楽しいですわね。"}
+      end:"次から次へと…ふふ、楽しいですわね。"},
+    {id:"beautiful",attr:"綺麗",
+      q:{thing:function(n){return n+"…とっても綺麗ですわ…あなた様は何が綺麗だと思いますか？"}},
+      end:"まぁっ…それもまたお綺麗ですわ…"},
+    {id:"precious",attr:"大切",
+      q:"わたくしの箱は、大切なものを入れる保管庫でもありますの。あなた様にも大切なものはございますか？",
+      end:"素敵ですわ。今までの想いが伝わってきますわ。"}
   ];
   var ATTRT={
     "ロマンチック":function(n){return n+"…やっぱりコレですわ。コレなんですわ。"},
@@ -1190,7 +1204,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     say(a.q,function(){showChoices({ask:a,use:[],key:"ask:"+a.id,y:"えーっとね",n:"教えない"})});
   }
   function openT(a){
-    tpend=a;$("tqtext").textContent=(ASK_ADJ[a.attr]||a.attr+"な")+"ことばを教えてください。";$("tword").value="";$("tcat").value="";
+    tpend=a;$("tqtext").textContent=(ASK_ADJ[a.attr]||a.attr+"な")+"ことばが知りたいですわ！";$("tword").value="";$("tcat").value="";
     say("まあ、ぜひ、お聞かせくださいませ。",function(){$("tp").classList.add("on");$("tword").focus()});
   }
   function closeT(){$("tp").classList.remove("on");tpend=null}
@@ -1210,7 +1224,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     });
   }
 
-  var GOOD=["まあ、嬉しゅうございます。","ふふ、安心いたしました。","ありがとうございます。"],
+  var GOOD=["まあ、嬉しいですわ。","ふふ、安心いたしました。","ありがとうございます。"],
       CLOSE=["それでは、またのちほど。","では、ひとまず失礼いたしますね。ごきげんよう。","本日はこのあたりで。ごきげんよう。"];
   function judge(d){
     var r=last;last=null;showFb(false);stopIdle();
@@ -1244,7 +1258,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       idleTimer=setTimeout(function(){say(byeFull(),function(){startIdle(7000)})},900);
     });
   }
-  function nope(){endTalk("そうなんですね。")}
+  function nope(){endTalk("そうですか。ではのちほど。")}
 
   $("teach").onclick=function(){
     stopIdle();
@@ -1448,7 +1462,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       else if(idleTimer)startIdle(5000);     // 操作中は次のアニメ開始を先送り
     },true);
   });
-  say(words.length?"…おかえりなさいませ。本日も、お話しいたしましょう。":"…はじめまして。わたくし、箱の中におります。どうぞ、ことばを教えてくださいませ。");
+  say(words.length?"…おかえりなさいませ。本日も、お話しいたしましょう。":"…はじめまして。わたくし、箱の中におります。どうぞ、ことばを教えてくださいまし。");
 })();
 </script>
 </body>
