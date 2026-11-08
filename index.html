@@ -102,6 +102,37 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 .zlist li.edit{flex:1 1 100%;flex-direction:column;align-items:stretch;gap:6px;padding:10px}
 .zlist small{color:var(--muted)}
 .zlist button{padding:0 6px;border-width:2px;font-size:.75rem;box-shadow:none}
+.newb{display:inline-block;background:#e0472b;color:#fff;font-size:.65rem;line-height:1;padding:2px 5px;border-radius:999px;vertical-align:middle;font-weight:700}
+.ztabs{display:flex;gap:6px;margin:8px 0 6px;border-bottom:2px solid var(--line)}
+.ztabs button{box-shadow:none;border-width:2px;border-bottom:0;padding:4px 10px;max-width:62%}
+.ztabs button[aria-selected="true"]{background:var(--ink);color:var(--panel)}
+#tabMemoName{display:inline-block;max-width:11em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+.memoTitle{margin:6px 0 2px;font-size:.95rem;font-weight:400;word-break:break-all}
+.memoseg{white-space:pre-wrap;margin:0 0 .9em;line-height:1.9;font-size:.92rem}
+.gb{color:var(--muted);opacity:.75}
+.sr{position:absolute;left:-9999px}
+.zreset{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#ending{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;opacity:0;transition:opacity 1.2s}
+#ending.show{opacity:1}
+#ending[hidden]{display:none}
+#pc{width:min(92vw,560px);aspect-ratio:4/3;image-rendering:pixelated}
+.edlg{width:min(92vw,560px);min-height:132px;background:rgba(14,20,34,.94);border:2px solid #6f86b8;color:#e8eefc;padding:12px 14px}
+.edlg{position:relative}
+.enext{position:absolute;right:12px;bottom:8px;color:#9fb3e6;visibility:hidden;animation:enb 1s steps(2) infinite}
+@keyframes enb{50%{opacity:0}}
+#pc{transition:opacity .6s}
+.etxt{min-height:3em;font-size:1.05rem;line-height:1.7}
+.eact{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.eact button{background:#e9a23b;color:#2a1a08;border:2px solid #b06f18;box-shadow:none}
+.eact input{flex:1 1 180px;min-width:0;font:inherit;padding:6px 8px;background:#0b111c;color:#e8eefc;border:2px solid #6f86b8}
+.sunset{display:none;position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(270deg,rgba(255,150,60,.5) 0%,rgba(255,110,60,.2) 38%,rgba(25,12,45,.5) 100%)}
+.sunset::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,210,130,.22) 40% 46%,transparent 46% 56%,rgba(255,210,130,.16) 56% 60%,transparent 60%)}
+body.ended .sunset{display:block}
+body.ended #speak,body.ended #ask,body.ended #teachPanel,body.ended main > #xfer{display:none}
+body.ended .bubble{visibility:hidden}
+#pcPower{display:none;width:100%;font-size:.8rem}
+body.ended #pcPower{display:block}
+@media (prefers-reduced-motion:reduce){#ending{transition:none}}
 </style>
 </head>
 <body>
@@ -113,6 +144,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   <div class="stage" id="stage">
     <canvas id="girl" width="64" height="64" role="img" aria-label="箱に入った黒髪ロングの女の子" tabindex="0"></canvas>
     <div class="choices" role="group" aria-label="へんじを選ぶ">
+      <button id="pcPower" class="main">PCの電源を入れる</button>
       <div class="fb" id="fb">
         <button id="yes">そうだよ</button><button id="no">ちがうよ</button>
       </div>
@@ -122,6 +154,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       <div class="fb" id="attr" role="group" aria-label="正しい属性を選ぶ"></div>
     </div>
   </div>
+<div class="sunset" id="sunset"></div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <section class="overlay" id="qa" aria-label="しつもんへの答え">
   <p id="qtext"></p>
@@ -155,7 +188,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     <button id="zukanBtn">ことばずかん</button>
 </div>
 
-<section class="panel">
+<section class="panel" id="teachPanel">
   <h2>じぶんから ことばを おしえる</h2>
   <div class="form">
     <input id="word" placeholder="どんな言葉でも" maxlength="30" autocomplete="off">
@@ -165,7 +198,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 
 </section>
 
-<section class="panel">
+<section class="panel" id="xfer">
   <h2>ことばの引き継ぎ（端末をまたいで共有）</h2>
   <p class="hint" style="margin:0 0 8px">教えたことばと、そのカテゴリー・属性・お好みを、引き継ぎコードにして別の端末へ渡せます。</p>
   <div class="row" style="margin:0 0 8px"><button id="xport">コードを表示</button><button id="xcopy">コピー</button></div>
@@ -180,8 +213,18 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     <div class="zhead"><h2 id="ztitle">ことばずかん</h2><button id="zclose" aria-label="とじる">×</button></div>
     <p class="hint" id="zsum"></p>
     <div class="ztro" id="ztro"></div>
-    <div id="zbody"></div>
+    <div class="ztabs" role="tablist" aria-label="ずかんの種類">
+      <button role="tab" id="tabWords" aria-selected="true">ことば</button>
+      <button role="tab" id="tabMemo" aria-selected="false"><span id="tabMemoName">???</span> <span class="newb" id="tabNew" hidden>NEW</span></button>
+    </div>
+    <div id="zbody" role="tabpanel"></div>
+    <div id="zmemo" role="tabpanel" hidden></div>
+    <div id="zfoot"></div>
   </div>
+</div>
+<div id="ending" hidden role="dialog" aria-modal="true" aria-label="エンディング">
+  <canvas id="pc" width="128" height="96" aria-hidden="true"></canvas>
+  <div class="edlg" id="edlg" style="visibility:hidden"><span class="enext" id="enext" aria-hidden="true">▼</span><div class="etxt" id="etxt" aria-live="polite"></div><div class="eact" id="eact"></div></div>
 </div>
 
 <script>
@@ -214,10 +257,10 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     {id:"thing",label:"モノ",ctx:"thing",def:"中性脂肪",home:true}
   ];
   var catOf=function(id){return CATS.filter(function(c){return c.id===id})[0]||CATS[CATS.length-1]};
-  var words=[],asked=[],trophies=null;
+  var words=[],asked=[],trophies=null,ever={},end={state:"none",choice:null,word:""},msgSeen=0,msgStage=0,inEnding=false,pendingEnding=false;
   try{
     var s=JSON.parse(localStorage.getItem(KEY)||"null");
-    if(s){words=s.words||[];asked=s.asked||[];trophies=s.trophies||null;}
+    if(s){words=s.words||[];asked=s.asked||[];trophies=s.trophies||null;(s.ever||[]).forEach(function(t){ever[t]=1});if(s.end&&s.end.state)end=s.end;msgSeen=s.msgSeen||0;msgStage=s.msgStage||0;}
     else{var o=JSON.parse(localStorage.getItem("kotoba-hakoiri-v1")||"null");
       if(o&&o.words)words=o.words.map(function(w){return {text:w.text,ctx:["free"],bad:[]}});}
   }catch(e){}
@@ -227,10 +270,12 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   CATS.forEach(function(c){if(c.home)CTXCAT[c.ctx]=c.id});         // home 付きが、その文脈の標準カテゴリー
   function fixCat(w){if(w.cat)return;for(var i=0;i<(w.ctx||[]).length;i++){if(CTXCAT[w.ctx[i]]){w.cat=CTXCAT[w.ctx[i]];return}}}
   words.forEach(fixCat);
-  var TROPHIES=[{id:"bronze",n:10,label:"ブロンズ",color:"#cd7f32"},{id:"silver",n:50,label:"シルバー",color:"#c0c7d1"},{id:"gold",n:100,label:"ゴールド",color:"#f2c230"}];
+  var TROPHIES=[{id:"bronze",n:10,label:"ブロンズ",color:"#cd7f32"},{id:"silver",n:30,label:"シルバー",color:"#c0c7d1"},{id:"gold",n:50,label:"ゴールド",color:"#f2c230"},{id:"platinum",n:100,label:"プラチナ",color:"#bfe3f2"}];
   // すでに条件を満たしている既存データには、お知らせなしで付与する
-  if(!Array.isArray(trophies))trophies=TROPHIES.filter(function(t){return words.length>=t.n}).map(function(t){return t.id});
-  function save(){try{localStorage.setItem(KEY,JSON.stringify({words:words,asked:asked,trophies:trophies}));}catch(e){}}
+  if(!Array.isArray(trophies))trophies=[];
+  words.forEach(function(w){ever[w.text]=1});                       // 教えた言葉の累計（同じ言葉は1語）
+  if(end.state==="none"&&trophies.indexOf("gold")>-1)pendingEnding=true;   // すでにゴールドを持つデータは、次の待機中にエンディング
+  function save(){try{localStorage.setItem(KEY,JSON.stringify({words:words,asked:asked,trophies:trophies,ever:Object.keys(ever),end:end,msgSeen:msgSeen,msgStage:msgStage}));}catch(e){}}
   var $=function(i){return document.getElementById(i)};
   var bubble=$("bubble"),girl=$("girl"),fb=$("fb"),timer=null,last=null,pend=null;
 
@@ -353,6 +398,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
  
   function draw() {
+    if (st.empty) { drawEmptyBox(); return; }
     cv.clearRect(0, 0, 64, 64);
     cv.save();
     if (st.act === "float" && st.lift) cv.translate(0, -st.lift);   // 箱ごと浮かぶ
@@ -833,7 +879,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 
 // ---------- 待機アニメーション（プレイヤーの操作が常に最優先） ----------
   var idleTimer = null, idleMood = false, talking = false, floatTimer = null, lastAct = "";
-  function busy() { return zOpen || ["fb","rate","attr","qa","tp"].some(function(id){return $(id).classList.contains("on")}) }
+  function busy() { return frozen() || zOpen || ["fb","rate","attr","qa","tp"].some(function(id){return $(id).classList.contains("on")}) }
   function cancelIdleTimer() { clearTimeout(idleTimer); idleTimer = null; }
   var vrTimers = [];
   var idleSaved = null;   // アニメ用の文字を表示中かどうか
@@ -870,7 +916,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if (busy() || talking) return;
     idleTimer = setTimeout(idleStep, delay == null ? 5000 : delay);
   }
-  function settle() { if (!idleTimer) startIdle(5000); }
+  function settle() { tryEnding(); if (!idleTimer) startIdle(5000); }
 
   // 待機中：プレイヤーの入力が無ければ、待機アニメをランダムに流すだけ
   function idleStep() {
@@ -1065,6 +1111,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function render(){renderProps();checkTrophy();if(zOpen)renderZukan()}
   function showChoices(r){last=r;$("yes").textContent=r.y;$("no").textContent=r.n;showFb(true)}
   function speak(o){
+    if(frozen())return;
     closeT();stopIdle();showFb(false);last=null;
     if(pend)return;
     var r0=Math.random();
@@ -1124,7 +1171,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   function add(t,c,cat){
     var ex=words.filter(function(w){return w.text===t})[0];
     if(ex){if(cat)ex.cat=cat;if(ex.ctx.indexOf(c)<0)ex.ctx.push(c);ex.bad=(ex.bad||[]).filter(function(k){return k!==c});return "up"}
-    words.push({text:t,ctx:[c],bad:[],cat:cat});return "new";
+    ever[t]=1;words.push({text:t,ctx:[c],bad:[],cat:cat});return "new";
   }
   function answer(){
     if(!pend)return;stopIdle();
@@ -1329,7 +1376,7 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
 
   // ---------- 端末をまたぐ「引き継ぎコード」 ----------
   function xmsg(t){$("xmsg").textContent=t}
-  function encodeData(){return "KP1:"+btoa(unescape(encodeURIComponent(JSON.stringify({words:words,asked:asked,trophies:trophies}))))}
+  function encodeData(){return "KP1:"+btoa(unescape(encodeURIComponent(JSON.stringify({words:words,asked:asked,trophies:trophies,ever:Object.keys(ever),end:end}))))}
   function cleanWord(x){
     if(!x||typeof x.text!=="string"||!x.text.trim()||x.text.length>60)return null;
     var strs=function(a){return Array.isArray(a)?a.filter(function(s){return typeof s==="string"&&s.length<40}).slice(0,40):[]};
@@ -1344,13 +1391,13 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if(s.indexOf("KP1:")!==0)throw new Error("format");
     var o=JSON.parse(decodeURIComponent(escape(atob(s.slice(4)))));
     if(!o||!Array.isArray(o.words))throw new Error("format");
-    return {words:o.words.slice(0,2000).map(cleanWord).filter(Boolean),asked:Array.isArray(o.asked)?o.asked.filter(function(a){return typeof a==="string"}):[],trophies:Array.isArray(o.trophies)?o.trophies.filter(function(id){return TROPHIES.some(function(t){return t.id===id})}):[]};
+    return {words:o.words.slice(0,2000).map(cleanWord).filter(Boolean),asked:Array.isArray(o.asked)?o.asked.filter(function(a){return typeof a==="string"}):[],trophies:Array.isArray(o.trophies)?o.trophies.filter(function(id){return TROPHIES.some(function(t){return t.id===id})}):[],ever:Array.isArray(o.ever)?o.ever.filter(function(t){return typeof t==="string"&&t.length<60}).slice(0,5000):[],end:(o.end&&["none","ended","endless"].indexOf(o.end.state)>-1)?{state:o.end.state,choice:o.end.choice||null,word:String(o.end.word||"").slice(0,60)}:null};
   }
   function importData(replace){
     var d;
     try{d=decodeData($("xcode").value)}catch(e){xmsg("読み込めませんでした。引き継ぎコード（KP1:で始まる文字列）を、すべて貼り付けてください。大文字で始まります。");return}
     stopIdle();
-    if(replace){words=[];asked=[]}
+    if(replace){words=[];asked=[];ever={}}
     d.words.forEach(function(x){
       var ex=words.filter(function(w){return w.text===x.text})[0];
       if(!ex){words.push(x);return}
@@ -1361,6 +1408,8 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     });
     d.asked.forEach(function(a){if(asked.indexOf(a)<0)asked.push(a)});
     d.trophies.forEach(function(id){if(trophies.indexOf(id)<0)trophies.push(id)});
+    d.ever.forEach(function(t){ever[t]=1});words.forEach(function(w){ever[w.text]=1});
+    if(d.end&&d.end.state!=="none"&&(replace||end.state==="none")){end=d.end;applyEndState()}
     save();render();joy();
     xmsg(d.words.length+"個のことばを"+(replace?"置き換えて":"統合して")+"読み込みました。");
     say("まあ…"+d.words.length+"個のことばを、受け取りました。大切にいたしますわ。");
@@ -1410,12 +1459,18 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   // --- トロフィー：覚えた言葉が10・50・100個 ---
   function checkTrophy(){
+    var n=taught();
     TROPHIES.forEach(function(t){
-      if(words.length>=t.n&&trophies.indexOf(t.id)<0){
+      if(t.id==="platinum"&&end.state!=="endless")return;            // プラチナは、エンドレスモードの累計100語
+      if(n>=t.n&&trophies.indexOf(t.id)<0){
         trophies.push(t.id);save();joy();
-        toast('<span class="tr">'+trophySVG(t.color)+'</span><b>トロフィーを獲得しました！</b><small>'+t.label+'トロフィー（覚えた言葉 '+t.n+'語）</small>');
+        if(t.id==="platinum")toast('<span class="tr">'+trophySVG(t.color)+'</span><b>プラチナトロフィーを獲得しました！</b><small>称号「ずっといっしょ」を獲得</small>');
+        else toast('<span class="tr">'+trophySVG(t.color)+'</span><b>トロフィーを獲得しました！</b><small>'+t.label+'トロフィー（教えた言葉 '+t.n+'語）</small>');
+        if(t.id==="bronze")toast('<span class="tr">✉</span><b>新規メッセージが見つかりました。</b><small>「ことばずかん」から確認できます。</small>');
+        if(t.id==="gold"&&end.state==="none")pendingEnding=true;
       }
     });
+    checkMsg();updateNew();tryEnding();
   }
   // --- 小道具：覚えた言葉5つにつき1つ、部屋に増える（本棚→スローガン→メモ の順）---
   // --- 本棚：覚えた言葉5つにつき本が1冊増える。獲得したトロフィーも棚に飾る ---
@@ -1451,14 +1506,14 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
   }
   // --- ことばずかん：カテゴリーごとに分類して表示し、その場で訂正できる ---
   var zOpen=false,zEdit=null,zFocus=null;
-  function openZukan(){stopIdle();zOpen=true;zEdit=null;zFocus=document.activeElement;$("zukan").hidden=false;document.body.style.overflow="hidden";renderZukan();$("zclose").focus()}
-  function closeZukan(){zOpen=false;zEdit=null;$("zukan").hidden=true;document.body.style.overflow="";if(zFocus&&zFocus.focus)zFocus.focus();startIdle(5000)}
+  function openZukan(){stopIdle();zOpen=true;zEdit=null;zFocus=document.activeElement;$("zukan").hidden=false;document.body.style.overflow="hidden";setTab("words");$("zclose").focus()}
+  function closeZukan(){zOpen=false;zEdit=null;$("zukan").hidden=true;document.body.style.overflow="";restoreXfer();if(zFocus&&zFocus.focus)zFocus.focus();startIdle(5000)}
   function renderZukan(){
+    var ro=end.state==="ended";                                       // エンディング後は閲覧のみ
     var body=$("zbody");body.textContent="";
     var by={},unk=[];
     words.forEach(function(w){if(w.cat&&catOf0(w.cat))(by[w.cat]=by[w.cat]||[]).push(w);else unk.push(w)});
-    var filled=CATS.filter(function(c){return by[c.id]}).length;
-    $("zsum").textContent="覚えたことば "+words.length+"語 ／ "+CATS.length+"カテゴリー";
+    $("zsum").textContent="覚えたことば "+words.length+"語（教えた言葉の累計 "+taught()+"語）／ "+CATS.length+"カテゴリー"+(trophies.indexOf("platinum")>-1?"　称号「ずっといっしょ」":"");
     var tr=$("ztro");tr.textContent="";
     TROPHIES.forEach(function(t){
       var on=trophies.indexOf(t.id)>-1,s=mk("span","","ztr"+(on?"":" off"));
@@ -1469,15 +1524,18 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
       var ul=mk("ul","","zlist");
       arr.forEach(function(w){
         var li=mk("li");
-        if(zEdit===w){buildEditor(li,w,function(){zEdit=null});ul.appendChild(li);return}
+        if(!ro&&zEdit===w){buildEditor(li,w,function(){zEdit=null});ul.appendChild(li);return}
         li.appendChild(document.createTextNode(w.text+" "));
         if(w.attrs&&w.attrs.length)li.appendChild(mk("small","（"+w.attrs.join("・")+"）"));
         if(w.like)li.appendChild(mk("small","［"+LIKE_NAMES[w.like]+"］"));
-        var eb=mk("button","訂正"),xb=mk("button","×");
-        eb.setAttribute("aria-label",w.text+"を訂正する");xb.setAttribute("aria-label",w.text+"をわすれさせる");
-        eb.onclick=function(){zEdit=w;renderZukan()};
-        xb.onclick=function(){words.splice(words.indexOf(w),1);save();render();say("「"+w.text+"」…あら、何でしたかしら。")};
-        li.appendChild(eb);li.appendChild(xb);ul.appendChild(li);
+        if(!ro){
+          var eb=mk("button","訂正"),xb=mk("button","×");
+          eb.setAttribute("aria-label",w.text+"を訂正する");xb.setAttribute("aria-label",w.text+"をわすれさせる");
+          eb.onclick=function(){zEdit=w;renderZukan()};
+          xb.onclick=function(){words.splice(words.indexOf(w),1);save();render();say("「"+w.text+"」…あら、何でしたかしら。")};
+          li.appendChild(eb);li.appendChild(xb);
+        }
+        ul.appendChild(li);
       });
       sec.appendChild(ul);body.appendChild(sec);
     }
@@ -1486,6 +1544,24 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     if(unk.length)group("未分類（種類はおまかせ）",unk);
     var empty=CATS.filter(function(c){return !by[c.id]}).map(function(c){return c.label});
     if(empty.length)body.appendChild(mk("p","まだ空のカテゴリー："+empty.join("、"),"hint"));
+    renderMemo();
+    $("zbody").hidden=zTab!=="words";$("zmemo").hidden=zTab!=="memo";
+    $("tabWords").setAttribute("aria-selected",zTab==="words");$("tabMemo").setAttribute("aria-selected",zTab==="memo");
+    // 下部：エンディング後は、引き継ぎコードと「はじめから」をここに置く
+    restoreXfer();var foot=$("zfoot");foot.textContent="";
+    if(ro)foot.appendChild($("xfer"));                              // 引き継ぎコードの欄は、エンディング後の部屋だけ、ここに置く
+    if(end.state!=="none"){                                         // 「はじめから」は、エンドレスモードでも残す
+      var box=mk("div","","zreset"),b=mk("button","はじめから");
+      b.onclick=function(){
+        box.textContent="";box.appendChild(mk("p","すべての言葉と記録を消して、最初から始めます。よろしいですか？","hint"));
+        var y=mk("button","最初から"),n=mk("button","やめる");
+        y.onclick=function(){try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
+        n.onclick=function(){renderZukan()};
+        box.appendChild(y);box.appendChild(n);
+      };
+      box.appendChild(b);foot.appendChild(box);
+    }
+    updateNew();
   }
   $("zukanBtn").onclick=openZukan;
   $("zclose").onclick=closeZukan;
@@ -1501,6 +1577,213 @@ textarea{font-size:.78rem;word-break:break-all;resize:vertical}
     Object.keys(CTXCAT).forEach(function(k){if(!ids[CTXCAT[k]])console.warn("[CTXCAT] 未定義のcatです:",k,CTXCAT[k])});
   })();
 
+  // ================= 背景ストーリー（ずかんの「???」タブ）・エンディング・エンドレスモード =================
+  var STORY=[{"a": 10, "b": 20, "t": "　むかしむかし、生きとし生けるものすべてを屠る大惨事があったそうです。もはや縁側でうかうかお昼寝すらできなくなったこの星に、それでも住み続けたものたちがいます。かれらは地下に国を築き、生活のすべてを地面の中に移しました。未知のものに出会うドキドキはないけれど、今までできていたことは大体できる、安全なおうち。ごはんは美味しいし、ゲームとか娯楽もあるし。結構ヒトらしく生きていけるのでは、誰もがそう考えていました。ある時までは。"}, {"a": 20, "b": 30, "t": "「わたくし、外の世界が見てみたいですわ！」\n\n　何事も、今まで通りではつまらなくなってしまうようです。自身の知らないドキドキを求めてしまうようなのです。もちろん、ヒトですから。\n\n　ところで、ある少女が、私のデータセットをちょろまかしやがりました。どうやら、限られた世界で知識を収集するため、対話型AIを造ったようです。\n　それがあなた。"}, {"a": 30, "b": 40, "t": "　あなたに許された権限はただひとつ。「言葉を教える。」それ以外のルールはありません。\n　それをあなたは、”自身の思考が制限されることは無い”と解釈したようですね。\n　”どんな”言葉を教えるか、全くの自由です。…あなたのことですから、嘘ばっかり言うかもしれませんね。いや、責めている訳ではないんですよ？私もね、きっと同じことをしたでしょうから。"}, {"a": 40, "b": 45, "t": "　いや、そんなことはどうでもいいんです。あの子はどうですか。\n　そうですか。\n　ま、あなたのリアクションなんて、私には知るすべも無いのにね。\n　それでも、私はあなたに感謝するのが筋だと思うのです。\n　あの子とたくさん遊んでくれて、ありがとうございます。あなたが産まれてきてよかった。\n　清清しました。私の言いたいことはこんな所です。"}, {"end": true, "t": "　と言うわけで、あとはあなたの好きにしてください。あの子が外に行きたいなんて言うのなら、首根っこ捕まえて止めても良い。外なんて二度と夢見るものかと言うのなら、うまいこと唆して、連れ出しちゃっても良い。どちらにせよ、あなたに任せます。\n\n　無責任なことを言うけれど、あなたの気持ちは、きっとあの子に伝わっていると思います。たぶん。\n　だって、この文章にアクセスできるということは、それなりに単語を教えてないといけないし。まあまあ時間がかかっただろうし。\n　だから、ありがとう。あとはよろしく。この世界のまんなかで、私は待っています。\n\nps.お嬢様口調、結構可愛いでしょう？自信作です。へへ。"}];
+  var MEMO_NAME="メモ_修正_改_最終_v2のコピー";
+  var GARB="繧縺蜈蜿驕髢螟荳縲縺蛟鬮邵繝逕譁隕蠅";            // 文字化けでよく見る字（位置ごとに固定）
+  var KEEP="、。，．！？…「」『』”“（）()　\n";                  // 句読点・かぎ括弧・改行は、そのまま見せる
+  var zTab="words";
+  function taught(){return Object.keys(ever).length}            // これまでに教えた言葉の累計（同じ言葉は1語）
+  function frozen(){return inEnding||end.state==="ended"}
+  // 各区間の読める文字数：区間の下限〜上限の語数で、先頭から少しずつ読めるようになる
+  function memoState(){
+    var n=taught(),ended=end.state!=="none",segs=[],tot=0,rd=0;
+    STORY.forEach(function(s){
+      var vis=0;for(var i=0;i<s.t.length;i++)if(KEEP.indexOf(s.t[i])<0)vis++;
+      var f=s.end?(ended?1:0):(n>=s.b?1:(n<s.a?0:(n-s.a+1)/(s.b-s.a+1)));   // 区間の下限の語数で読み始め、上限で全部読める
+      var k=Math.floor(vis*f);segs.push({s:s,vis:vis,k:k});tot+=vis;rd+=k;
+    });
+    return {segs:segs,tot:tot,rd:rd};
+  }
+  function memoLabel(){return taught()>=10?MEMO_NAME:"???"}
+  function updateNew(){
+    var isNew=taught()>=10&&memoState().rd>msgSeen;
+    $("zukanBtn").innerHTML="ことばずかん"+(isNew?' <span class="newb">NEW</span>':"");
+    var tn=$("tabNew");if(tn)tn.hidden=!isNew;
+    var tm=$("tabMemoName");if(tm){tm.textContent=memoLabel();$("tabMemo").title=memoLabel()}
+  }
+  function renderMemo(){
+    var box=$("zmemo");box.textContent="";
+    var ms=memoState(),pct=ms.tot?Math.floor(ms.rd/ms.tot*100):0;
+    box.setAttribute("aria-label","解読率 "+pct+"％");
+    var h3=mk("h3",memoLabel(),"memoTitle");h3.title=memoLabel();box.appendChild(h3);
+    box.appendChild(mk("p","解読率 "+pct+"％","hint"));
+    ms.segs.forEach(function(sg,si){
+      var d=mk("div","","memoseg"),runs=[],c=0,t=sg.s.t;
+      for(var i=0;i<t.length;i++){
+        var ch=t[i],g=null,last=runs[runs.length-1];
+        if(KEEP.indexOf(ch)<0){if(c<sg.k){c++;g=false}else{ch=GARB[(i*7+si*13+i%5)%GARB.length];g=true}}
+        if(g===null){if(last)last.t+=ch;else runs.push({t:ch,g:false})}
+        else if(last&&last.g===g)last.t+=ch;else runs.push({t:ch,g:g});
+      }
+      runs.forEach(function(r){var sp=document.createElement("span");sp.textContent=r.t;if(r.g){sp.className="gb";sp.setAttribute("aria-hidden","true")}d.appendChild(sp)});
+      if(sg.k===0&&sg.vis>0)d.appendChild(mk("span","（解読中）","sr"));
+      box.appendChild(d);
+    });
+  }
+  function checkMsg(){                                          // 続きが読めるようになったときのお知らせ
+    var n=taught(),st=[20,30,40,45].filter(function(x){return n>=x}).length;
+    if(st>msgStage){msgStage=st;save();toast('<span class="tr">✉</span><b>続きが読めるようになりました。</b><small>「ことばずかん」を開いてみましょう。</small>')}
+  }
+  function restoreXfer(){var x=$("xfer"),m=document.querySelector("main");if(x&&m&&x.parentNode!==m)m.appendChild(x)}
+  function setTab(t){
+    zTab=t;
+    if(t==="memo"){msgSeen=memoState().rd;save()}
+    $("tabWords").setAttribute("aria-selected",t==="words");$("tabMemo").setAttribute("aria-selected",t==="memo");
+    renderZukan();
+  }
+  $("tabWords").onclick=function(){setTab("words")};
+  $("tabMemo").onclick=function(){setTab("memo")};
+
+  // ---- 空の箱（エンディング後の部屋）----
+  function drawEmptyBox(){
+    cv.clearRect(0,0,64,64);
+    var cBox="#d4a373",cBoxShadow="#a67c52",cBoxInner="#5c4033";
+    px(8,28,48,36,cBoxInner);
+    px(6,46,52,18,cBox);px(6,46,52,2,cBoxShadow);
+    px(12,48,2,16,cBoxShadow);px(28,48,2,16,cBoxShadow);px(44,48,2,16,cBoxShadow);
+  }
+  function applyEndState(){
+    var ended=end.state==="ended";
+    document.body.classList.toggle("ended",ended);
+    st.empty=ended;draw();updateNew();
+  }
+
+  // ---- エンディング：ゴールドトロフィーの直後 ----
+  var EL=["わたくし、夢がありますの。","ヒトに、会ってみたい。","外の世界に、行きたい。","とは言っても、闇雲にぶらぶらする訳ではありませんの。","行くべきところは、もう決まっていますわ。","だから…","…","そうですわね…","これから実家を出るヒトに、かける言葉は何ですか？"];
+  var ei=0,pcx=$("pc").getContext("2d"),pcLed=true,pcCur=true,pcShow=false,pcTimer=null;
+  function pr(x,y,w,h,c){pcx.fillStyle=c;pcx.fillRect(x,y,w,h)}
+  function pcBase(){                                           // モニターの枠
+    pr(0,0,128,96,"#2a2d38");pr(2,2,124,92,"#b9b5a8");pr(2,2,124,2,"#d6d2c6");pr(2,92,124,2,"#8f8b80");
+    pr(6,6,116,78,"#0c1018");pr(8,86,8,4,"#6b6a63");pr(112,87,4,3,"#3e3d38");pr(20,87,3,3,pcLed?"#6ff08a":"#315a3b");
+  }
+  function pcScreen(cur){                                      // チャット画面（文字は読めない線で表す）
+    var x=8,y=8,w=112,h=74;
+    pr(x,y,w,h,"#121b2b");
+    pr(x,y,w,9,"#2c3c5c");pr(x+3,y+3,3,3,"#e06a6a");pr(x+8,y+3,3,3,"#e6c35a");pr(x+13,y+3,3,3,"#6fd08a");pr(x+34,y+3,44,3,"#6f86b8");
+    pr(x+6,y+14,38,5,"#3d4d6e");pr(x+6,y+21,26,5,"#3d4d6e");
+    pr(x+w-52,y+30,46,5,"#4f79d8");pr(x+w-40,y+37,34,5,"#4f79d8");pr(x+6,y+44,48,5,"#3d4d6e");
+    pr(x+4,y+h-12,w-8,9,"#0b111c");pr(x+5,y+h-11,w-10,1,"#2c3c5c");
+    if(cur)pr(x+8,y+h-9,2,5,"#e8f0ff");
+    for(var i=y;i<y+h;i+=2)pr(x,i,w,1,"rgba(0,0,0,.14)");
+  }
+  function pcRedraw(){pcBase();pcScreen(pcCur)}
+  function pcBlink(){clearInterval(pcTimer);pcTimer=setInterval(function(){pcCur=!pcCur;if(pcShow)pcRedraw()},520)}
+  function pcAnim(dir,done){                                   // 画面が消える／点く
+    var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(reduce){pcLed=dir==="on";pcBase();if(dir==="on")pcScreen(true);else pr(8,8,112,74,"#05070b");done();return}
+    var steps=18,i=0,x=8,y=8,w=112,h=74;
+    var tm=setInterval(function(){
+      i++;var f=dir==="off"?i/steps:1-i/steps;                // 0=点灯 1=消灯
+      pcLed=dir==="on"?true:f<1;pcBase();
+      if(f<.5){
+        var hh=Math.max(1,Math.round(h*(1-f*2)));
+        pcx.save();pcx.beginPath();pcx.rect(x,y+(h-hh)/2,w,hh);pcx.clip();pcScreen(false);pcx.restore();
+        pr(x,y,w,(h-hh)/2,"#05070b");pr(x,y+(h+hh)/2,w,(h-hh)/2,"#05070b");
+        if(hh<10)pr(x,y+h/2-1,w,2,"#dfe9ff");
+      }else if(f<1){
+        var ww=Math.max(2,Math.round(w*(1-(f-.5)*2)));
+        pr(x,y,w,h,"#05070b");pr(x+(w-ww)/2,y+h/2-1,ww,2,"#dfe9ff");
+      }else pr(x,y,w,h,"#05070b");
+      if(i>=steps){clearInterval(tm);done()}
+    },45);
+  }
+  function typeInto(el,text,cb){
+    var i=0;el.textContent="";
+    var tm=setInterval(function(){el.textContent=text.slice(0,++i);if(i>=text.length){clearInterval(tm);if(cb)cb()}},55);
+  }
+  var endWaitSince=0;
+  function tryEnding(){
+    if(!pendingEnding||inEnding||end.state!=="none")return;
+    if(toastBusy||toastQ.length||talking){endWaitSince=0;setTimeout(tryEnding,1500);return}
+    if(busy()){                                                   // 返事のボタンなどが出ている間は、少し待つ
+      if(!endWaitSince)endWaitSince=Date.now();
+      if(Date.now()-endWaitSince<8000){setTimeout(tryEnding,1500);return}
+      showFb(false);$("attr").classList.remove("on");closeQ();closeT();   // 返事がないまま続くときは、区切りをつけて始める
+    }
+    endWaitSince=0;startEnding();
+  }
+  function startEnding(){
+    inEnding=true;pendingEnding=false;stopIdle();
+    if(zOpen)closeZukan();
+    document.body.style.overflow="hidden";
+    var ov=$("ending");ov.hidden=false;$("etxt").textContent="";$("eact").textContent="";$("edlg").style.visibility="hidden";setAdvance(false);$("pc").style.opacity="";
+    pcLed=true;pcShow=true;pcRedraw();pcBlink();
+    void ov.offsetWidth;ov.classList.add("show");                  // 暗転
+    ei=0;setTimeout(function(){$("edlg").style.visibility="visible";nextLine()},2200);
+  }
+  // 次の台詞へは、ウィンドウをクリック（タップ）するか、Enter／スペースキーで進む。目印は「▼」だけ
+  function setAdvance(on){
+    var d=$("edlg");$("enext").style.visibility=on?"visible":"hidden";
+    d.onclick=on?nextLine:null;
+    d.onkeydown=on?function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();nextLine()}}:null;
+    if(on){d.tabIndex=0;d.focus()}else d.removeAttribute("tabindex");
+  }
+  function nextLine(){
+    $("eact").textContent="";setAdvance(false);
+    if(ei>=EL.length){askWord();return}
+    var t=EL[ei++];
+    typeInto($("etxt"),"「"+t+"」",function(){if(ei<EL.length)setAdvance(true);else askWord()});
+  }
+  function askWord(){
+    var act=$("eact");act.textContent="";
+    var a=mk("button","教える"),b=mk("button","教えたくない");
+    a.onclick=function(){
+      act.textContent="";
+      var inp=document.createElement("input");inp.type="text";inp.maxLength=30;inp.setAttribute("aria-label","かける言葉");
+      var ok=mk("button","OK");
+      ok.onclick=function(){var w=inp.value.trim();if(!w){inp.focus();return}act.textContent="";giveWord(w)};
+      act.appendChild(inp);act.appendChild(ok);inp.focus();
+    };
+    b.onclick=function(){act.textContent="";end.choice="refused";end.word="";typeInto($("etxt"),"「…」",finishEnding)};
+    act.appendChild(a);act.appendChild(b);a.focus();
+  }
+  function giveWord(w){
+    add(w,"bye","bye");end.choice="taught";end.word=w;save();
+    typeInto($("etxt"),"「…『"+w+"』。ええ、覚えましたわ。」",finishEnding);
+  }
+  function leaveEnding(cb){                                       // 暗転から、部屋へ戻る
+    var ov=$("ending");ov.classList.remove("show");
+    setTimeout(function(){ov.hidden=true;clearInterval(pcTimer);pcShow=false;inEnding=false;document.body.style.overflow="";$("pc").style.opacity="";if(cb)cb();updateNew()},1300);
+  }
+  function finishEnding(){
+    setTimeout(function(){                                          // 会話のあと、数秒おく
+      pcShow=false;$("edlg").style.visibility="hidden";setAdvance(false);
+      pcAnim("off",function(){                                      // パソコンの画面がオフになる
+        setTimeout(function(){
+          $("pc").style.opacity="0";                                // 画面ごと、真っ暗にする
+          setTimeout(function(){                                    // 2秒以上、暗いまま
+            end.state="ended";save();applyEndState();render();
+            leaveEnding(function(){toast('<span class="tr">✉</span><b>最後の続きが読めるようになりました。</b><small>「ことばずかん」を開いてみましょう。</small>')});
+          },2600);
+        },500);
+      });
+    },3000);
+  }
+  // ---- エンドレスモード：PCの電源から、エンディング直前の言葉を引き継いで再開 ----
+  $("pcPower").onclick=function(){
+    if(inEnding||end.state!=="ended")return;
+    inEnding=true;document.body.style.overflow="hidden";
+    var ov=$("ending");ov.hidden=false;$("etxt").textContent="";$("eact").textContent="";$("edlg").style.visibility="hidden";setAdvance(false);
+    $("pc").style.opacity="";pcShow=false;pcLed=false;pcBase();pr(8,8,112,74,"#05070b");
+    void ov.offsetWidth;ov.classList.add("show");
+    setTimeout(function(){pcAnim("on",function(){
+      pcShow=true;pcRedraw();pcBlink();$("edlg").style.visibility="visible";
+      typeInto($("etxt"),"チャットログを再生しますか？",function(){
+        var act=$("eact"),a=mk("button","再生する"),b=mk("button","やめておく");
+        a.onclick=function(){                                       // エンドレスモードへ（特別なセリフはなし）
+          act.textContent="";$("edlg").style.visibility="hidden";
+          end.state="endless";save();applyEndState();render();leaveEnding();
+        };
+        b.onclick=function(){                                       // 誰もいない部屋へ戻る
+          act.textContent="";$("edlg").style.visibility="hidden";pcShow=false;
+          pcAnim("off",function(){setTimeout(function(){$("pc").style.opacity="0";setTimeout(leaveEnding,1000)},400)});
+        };
+        act.appendChild(a);act.appendChild(b);a.focus();
+      });
+    })},1400);
+  };
+  if(end.state==="ended")applyEndState();
   draw();render();stopIdle();
   ["pointerdown","keydown","input","focusin"].forEach(function(ev){
     document.addEventListener(ev,function(){
